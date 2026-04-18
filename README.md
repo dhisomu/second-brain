@@ -8,7 +8,8 @@ Welcome to the Xify Knowledge Base. This repository tracks infrastructure decisi
     *   [🏗️ Migration Strategy & Lessons](./xify.in/migration_sqlite_to_postgresql.md)
     *   [📜 Step-by-Step Walkthrough (Apr 18)](./xify.in/migration_walkthrough_2026_04_18.md)
 *   [**xelify.in**](./xelify.in/)
-    *   *(Waiting for updates)*
+    *   [🏗️ Infrastructure Overview](./xelify.in/README.md) - Subnets, IPs, and Isolated Stack Strategy.
+    *   [📜 Legacy System Architecture](./xelify.in/system_architecture.md) - Core components and maintenance schedule.
 
 ## 🛡️ Global Best Practices
 *   **The "Ping First" Rule**: Always verify DNS propagation before starting any Traefik-labeled containers.
