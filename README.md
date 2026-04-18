@@ -17,5 +17,8 @@ Welcome to the Xify Knowledge Base. This repository tracks infrastructure decisi
 *   **Zero-Downtime Config**: Always test Nginx config with `docker-compose exec xify-in nginx -t` before restarting.
 *   [**🛠️ Maintenance & Health Checks**](./maintenance.md) - Backup verification and server sizing commands.
 
+## 🚀 Pending Tasks
+- [⏳ Client-to-Server Logic Migration](./xify.in/task_client_to_server_migration.md)
+
 ---
 *Last Updated: 2026-04-18*
