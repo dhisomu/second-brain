@@ -4,7 +4,9 @@ Welcome to the Xify Knowledge Base. This repository tracks infrastructure decisi
 
 ## 📂 Projects
 *   [**xify.in**](./xify.in/)
-    *   [🐘 PostgreSQL Migration Guide](./xify.in/postgresql_guide.md) - How to manage and verify the new Pro database.
+    *   [🐘 PostgreSQL Management Guide](./xify.in/postgresql_guide.md)
+    *   [🏗️ Migration Strategy & Lessons](./xify.in/migration_sqlite_to_postgresql.md)
+    *   [📜 Step-by-Step Walkthrough (Apr 18)](./xify.in/migration_walkthrough_2026_04_18.md)
 *   [**xelify.in**](./xelify.in/)
     *   *(Waiting for updates)*
 
@@ -13,6 +15,7 @@ Welcome to the Xify Knowledge Base. This repository tracks infrastructure decisi
     *   `ping -c 1 subdomain.xify.in`
 *   **Prefix Isolation**: Use `prodev-` or `prostage-` prefixes for all new stacks.
 *   **Zero-Downtime Config**: Always test Nginx config with `docker-compose exec xify-in nginx -t` before restarting.
+*   [**🛠️ Maintenance & Health Checks**](./maintenance.md) - Backup verification and server sizing commands.
 
 ---
 *Last Updated: 2026-04-18*
