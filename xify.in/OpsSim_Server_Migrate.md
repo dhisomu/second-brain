@@ -65,9 +65,9 @@
 #### Test Cases (AAA)
 | Scenario | Test Logic |
 | :--- | :--- |
-| <a id="TC-1.1"></a>**TC 1.1: Unique Name (Happy Path)** | **Arrange**: User in settings modal with unique inputs.<br>**Act**: User enters "Proj_Alpha_01" and clicks Save.<br>**Assert**: HTTP 201 response received; Modal closes; Editor interactive.<br>**Validates**: **[AC 1.1.1](#AC-1.1.1)**, **[AC 1.1.4](#AC-1.1.4)** |
-| <a id="TC-1.2"></a>**TC 1.2: Duplicate Name (Unhappy Path)** | **Arrange**: Database contains a project named "Demo".<br>**Act**: User enters "Demo" and attempts to Save.<br>**Assert**: Alert "matching name already exists" shown; Rename/Link buttons appear.<br>**Validates**: **[AC 1.1.2](#AC-1.1.2)**, **[AC 1.1.3](#AC-1.1.3)** |
-| <a id="TC-1.3"></a>**TC 1.3: Sanitization (Edge Case)** | **Arrange**: User enters SQL tokens (e.g., `'; DROP TABLE...`).<br>**Act**: User clicks Save.<br>**Assert**: Server processes input as literal string; no database damage.<br>**Validates**: **[AC 1.1.4](#AC-1.1.4)** |
+| <a id="TC-1.1"></a> [TC 1.1: Unique Name (Happy Path)](#TC-1.1-spec) | **Arrange**: User in `"Project & Grid Settings"` window with unique inputs.<br>**Act**: User enters "Proj_Alpha_01" and clicks Save.<br>**Assert**: The settings window disappears; the 3D scene (Editor) becomes interactive.<br>**Validates**: **[AC 1.1.1](#AC-1.1.1)**, **[AC 1.1.4](#AC-1.1.4)** |
+| <a id="TC-1.2"></a> [TC 1.2: Duplicate Name (Unhappy Path)](#TC-1.2-spec) | **Arrange**: Database contains a project named "Demo".<br>**Act**: User enters "Demo" and attempts to Save.<br>**Assert**: A window pops up with message "matching name already exists"; Rename button appears.<br>**Validates**: **[AC 1.1.2](#AC-1.1.2)**, **[AC 1.1.3](#AC-1.1.3)** |
+| <a id="TC-1.3"></a> [TC 1.3: Sanitization (Edge Case)](#TC-1.3-spec) | **Arrange**: User enters SQL tokens (e.g., `'; DROP TABLE...`).<br>**Act**: User clicks Save.<br>**Assert**: Project is saved successfully; Name shown exactly as typed in the project list.<br>**Validates**: **[AC 1.1.4](#AC-1.1.4)** |
 
 ### Flow 2: Existing Project Selection ([Path 1.2](#Path-1.2))
 *Tasks: TSK-MIG-011, TSK-MIG-014*
@@ -80,6 +80,98 @@
 #### Test Cases (AAA)
 | Scenario | Test Logic |
 | :--- | :--- |
-| <a id="TC-2.1"></a>**TC 2.1: Selection Flow (Happy Path)** | **Arrange**: User clicks an existing thumbnail.<br>**Act**: User clicks "VIEW" button in choice modal.<br>**Assert**: URL changes to `/Apps/xify_opssim_view/` with correct ID.<br>**Validates**: **[AC 1.2.1](#AC-1.2.1)**, **[AC 1.2.2](#AC-1.2.2)** |
-| <a id="TC-2.2"></a>**TC 2.2: Version Cloning (Happy Path)** | **Arrange**: User clicks "EDIT" for Version 5 of a project.<br>**Act**: Logic triggers project cloning.<br>**Assert**: Database contains NEW Version 6; Editor opens Version 6.<br>**Validates**: **[AC 1.2.3](#AC-1.2.3)** |
-| <a id="TC-2.3"></a>**TC-2.3: Stale Data (Edge Case)** | **Arrange**: Snapshot is manually deleted during user session.<br>**Act**: User clicks "VIEW" for the deleted snapshot.<br>**Assert**: System displays "Snapshot no longer available" error.<br>**Validates**: **[AC 1.2.2](#AC-1.2.2)** |
+| <a id="TC-2.1"></a> [TC 2.1: Selection Flow (Happy Path)](#TC-2.1-spec) | **Arrange**: User clicks an existing thumbnail.<br>**Act**: User clicks "VIEW" button in the selection window.<br>**Assert**: Screen transitions to Viewer app; Editing/Settings tools are removed from UI.<br>**Validates**: **[AC 1.2.1](#AC-1.2.1)**, **[AC 1.2.2](#AC-1.2.2)** |
+| <a id="TC-2.2"></a> [TC 2.2: Version Cloning (Happy Path)](#TC-2.2-spec) | **Arrange**: User clicks "EDIT" for Version 5 of a project.<br>**Act**: Logic triggers project cloning.<br>**Assert**: Editor opens; Version 6 is visible in the page header label.<br>**Validates**: **[AC 1.2.3](#AC-1.2.3)** |
+| <a id="TC-2.3"></a> [TC 2.3: Stale Data (Edge Case)](#TC-2.3-spec) | **Arrange**: Snapshot is manually deleted during user session.<br>**Act**: User clicks "VIEW" for the deleted snapshot.<br>**Assert**: Window displays "Snapshot no longer available" with a Return button.<br>**Validates**: **[AC 1.2.2](#AC-1.2.2)** |
+## Detailed Test Case Specifications (AAA Reference)
+
+### <a id="TC-1.1-spec"></a>[TC 1.1: Unique Name (Happy Path)](#TC-1.1)
+- **Scenario:** The user provides a project name that does not exist in the database.
+- **Arrange:** 
+    - Application is in the Editor mode (`index.html`).
+    - `"Project & Grid Settings"` window is open.
+    - "NewProject_01" does not exist in the database.
+- **Act:** 
+    - User types "NewProject_01" in the name field.
+    - User clicks the "Save" button.
+- **Assert:** 
+    - The `"Project & Grid Settings"` window closes.
+    - The 3D scene (grid/environment) becomes active/clickable.
+    - No warning or error windows are visible.
+- **Validates:** **[AC 1.1.1](#AC-1.1.1)**, **[AC 1.1.4](#AC-1.1.4)**
+
+---
+
+### <a id="TC-1.2-spec"></a>[TC 1.2: Duplicate Name (Unhappy Path)](#TC-1.2)
+- **Scenario:** The user provides a project name that already exists in the database.
+- **Arrange:** 
+    - A project named "ExistingProject" already exists.
+    - `"Project & Grid Settings"` window is open.
+- **Act:** 
+    - User types "ExistingProject" and clicks "Save".
+- **Assert:** 
+    - A popup alert titled `"Warning"` (or similar) appears.
+    - Message "A project of matching name already exists" is visible.
+    - A button labeled `"Rename"` is shown.
+    - Clicking `"Rename"` moves the typing cursor into the name field and highlights the text.
+- **Validates:** **[AC 1.1.2](#AC-1.1.2)**, **[AC 1.1.3](#AC-1.1.3)**
+
+---
+
+### <a id="TC-1.3-spec"></a>[TC 1.3: Sanitization (Edge Case)](#TC-1.3)
+- **Scenario:** The user attempts to inject SQL commands into the project name field.
+- **Arrange:** 
+    - `"Project & Grid Settings"` window is open.
+- **Act:** 
+    - User enters `'; DROP TABLE projects; --` in the name field and clicks "Save".
+- **Act:** 
+    - System treats the string as a literal project name.
+- **Assert:** 
+    - The project is saved successfully without crashing.
+    - The user can see the exact string (with symbols) as the Project Name in the dashboard list.
+    - No database corruption or site failure occurs.
+- **Validates:** **[AC 1.1.4](#AC-1.1.4)**
+
+---
+
+### <a id="TC-2.1-spec"></a>[TC 2.1: Selection Flow (Happy Path)](#TC-2.1)
+- **Scenario:** The user wants to view an existing project in read-only mode.
+- **Arrange:** 
+    - User is on the `opssim_projects.html` dashboard.
+    - A list of existing project snapshots is displayed.
+- **Act:** 
+    - User clicks on a project thumbnail.
+    - User selects `"VIEW"` from the choice window.
+- **Assert:** 
+    - The screen transitions to the Viewer application.
+    - User confirms that the `"Grid Settings"` and editing tools are missing from the menu.
+    - The model is present for viewing only.
+- **Validates:** **[AC 1.2.1](#AC-1.2.1)**, **[AC 1.2.2](#AC-1.2.2)**
+
+---
+
+### <a id="TC-2.2-spec"></a>[TC 2.2: Version Cloning (Happy Path)](#TC-2.2)
+- **Scenario:** The user wants to edit an existing project snapshot.
+- **Arrange:** 
+    - Project "Project_X" is at Snapshot 5.
+- **Act:** 
+    - User clicks the thumbnail and selects "EDIT".
+- **Assert:** 
+    - The Editor application opens successfully.
+    - The user sees that the "Version ID" or "Snapshot ID" in the top header has increased by 1 from the original.
+    - All objects from the original snapshot are present in the new version.
+- **Validates:** **[AC 1.2.3](#AC-1.2.3)**
+
+---
+
+### <a id="TC-2.3-spec"></a>[TC-2.3: Stale Data (Edge Case)](#TC-2.3)
+- **Scenario:** The selected snapshot is removed while the user is browsing.
+- **Arrange:** 
+    - Dashboard is open with Snapshot 10 visible.
+    - Another process/admin deletes Snapshot 10 from the database.
+- **Act:** 
+    - User clicks on the thumbnail for Snapshot 10.
+- **Assert:** 
+    - The selection window pops up, but after choosing an option, a `"Snapshot no longer available"` message appears.
+    - A `"Return to Dashboard"` button is provided to the user.
+- **Validates:** **[AC 1.2.2](#AC-1.2.2)**
