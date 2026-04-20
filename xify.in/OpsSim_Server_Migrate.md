@@ -2,11 +2,12 @@
 
 **Objective**: Move key operations and variables from the client-side (v3d/js) to the server-side (FastAPI/Postgres).
 
-## To-Do List
-1. [ ] Audit `visual_logic.js` for hardcoded cost/production variables.
-2. [ ] Create `GET /api/config` endpoint to serve these variables dynamically.
-3. [ ] Shift simulation "Sum" and "Calculation" logic from JS to Python.
-4. [ ] Implement JWT-based validation for all state-changing operations.
+## Overall Migration Progress
+1. ✅ **TSK-MIG-015 / 010**: Project & Grid Settings Modal (Refactored to `install.js`)
+2. ✅ **TSK-MIG-016**: Secure Object Schema Delivery (Server-Gated & Fallback Lookup)
+3. ⏳ **TSK-MIG-011**: Dashboard Choice Modal (VIEW vs EDIT UI) - **[NEXT]**
+4. ⏳ **TSK-MIG-014**: Backend logic for Snapshot Cloning (Version Incrementing)
+5. ⏳ **TSK-MIG-017**: Modernize Snapshot Deep-Links in duplicate name alerts
 
 ## Why this matters?
 - **Security**: Prevents users from modifying cost/timing variables in the browser console.
