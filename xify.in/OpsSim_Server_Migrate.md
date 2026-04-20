@@ -44,7 +44,7 @@
 | :--- | :--- | :--- | :--- |
 | <a id="TSK-MIG-001"></a>**TSK-MIG-001** | Frontend | `opssim_projects.html` | Listen for "Create Blank Project" click. Implements [Path 1.1](#Path-1.1). |
 | <a id="TSK-MIG-002"></a>**TSK-MIG-002** | Frontend | `xify_opssim/index.html` | Trigger modal on load if `mode=new` exists. Implements [Path 1.1.1](#Path-1.1.1). |
-| <a id="TSK-MIG-004"></a>**TSK-MIG-004** | Backend | `backend/main.py` | [**DONE**] Implementation of `GET /api/projects/check-name`. Implements [Path 1.1.3](#Path-1.1.3). |
+| <a id="TSK-MIG-004"></a>**TSK-MIG-004** | Backend | `backend/main.py` | [**DONE**](https://github.com/xify-in/prodev-backend/commit/2980cdc) Implementation of `GET /api/projects/check-name`. Implements [Path 1.1.3](#Path-1.1.3). |
 | <a id="TSK-MIG-008"></a>**TSK-MIG-008** | Frontend | `xify_opssim/index.html` | "Rename" button listener in Project modal. Implements [Path 1.1.4.1](#Path-1.1.4.1). |
 | <a id="TSK-MIG-010"></a>**TSK-MIG-010** | Backend | `backend/main.py` | `POST /api/projects` to save grid & project metadata. Implements [Path 1.1.4.1.2](#Path-1.1.4.1.2). |
 | <a id="TSK-MIG-011"></a>**TSK-MIG-011** | Frontend | `opssim_projects.html` | Choice Modal (VIEW vs EDIT) for existing project clicks. Implements [Path 1.2](#Path-1.2). |
