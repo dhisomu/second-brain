@@ -7,7 +7,7 @@
 2. ✅ **TSK-MIG-016**: Secure Object Schema Delivery (Server-Gated & Fallback Lookup)
 3. ⏳ **TSK-MIG-011**: Dashboard Choice Modal (VIEW vs EDIT UI) - **[NEXT]**
 4. ⏳ **TSK-MIG-014**: Backend logic for Snapshot Cloning (Version Incrementing)
-5. ⏳ **TSK-MIG-017**: Modernize Snapshot Deep-Links in duplicate name alerts
+5. ⏳ **TSK-MIG-017**: Fix Broken Snapshot Link in duplicate name alerts
 
 ## Why this matters?
 - **Security**: Prevents users from modifying cost/timing variables in the browser console.
@@ -52,7 +52,7 @@
 | <a id="TSK-MIG-014"></a>**TSK-MIG-014** | Backend | `backend/main.py` | `POST /api/projects/clone` to increment version. Implements [Path 1.2.1.2](#Path-1.2.1.2). |
 | <a id="TSK-MIG-015"></a>**TSK-MIG-015** | Frontend | `install.js` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [79aaf4a](https://github.com/xify-in/xify.in/commit/79aaf4a)) Refactored Settings Modal to `install.js` with server-side name check interceptor. Implements [Path 1.1.4](#Path-1.1.4). |
 | <a id="TSK-MIG-016"></a>**TSK-MIG-016** | Fullstack | `backend/main.py` & `install.js` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [625027b](https://github.com/xify-in/xify.in/commit/625027b)) Server-gated object schema delivery via `/api/objects/schema`. Includes **v3d_prefix fallback** to support property window lookups by scene name. |
-| <a id="TSK-MIG-017"></a>**TSK-MIG-017** | Frontend | `install.js` | Update "View Latest Snapshot" link to use `project_name` and `version` params instead of raw JSON path. Implements [Path 1.1.5](#Path-1.1.5). |
+| <a id="TSK-MIG-017"></a>**TSK-MIG-017** | Frontend | `install.js` | Fix Broken "View Latest Snapshot" link — must use `project_name` and `version` params instead of raw JSON path. Implements [Path 1.1.5](#Path-1.1.5). |
 
 ## Acceptance Criteria (Given-When-Then) & Test Cases (Arrange-Act-Assert)
 
