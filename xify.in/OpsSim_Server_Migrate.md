@@ -5,7 +5,7 @@
 ## Overall Migration Progress
 1. ✅ **TSK-MIG-015 / 010**: Project & Grid Settings Modal (Refactored to `install.js`)
 2. ✅ **TSK-MIG-016**: Secure Object Schema Delivery (Server-Gated & Fallback Lookup)
-3. ⏳ **TSK-MIG-011**: Dashboard Choice Modal (VIEW vs EDIT UI) - **[NEXT]**
+3. ⏳ **TSK-MIG-011**: Project Access Mode: VIEW vs EDIT Selection - **[NEXT]**
 4. ⏳ **TSK-MIG-014**: Backend logic for Snapshot Cloning (Version Incrementing)
 5. ⏳ **TSK-MIG-017**: Fix Broken Snapshot Link in duplicate name alerts
 
@@ -48,7 +48,7 @@
 | <a id="TSK-MIG-004"></a>**TSK-MIG-004** | Backend | `backend/main.py` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [2980cdc](https://github.com/xify-in/xify.in/commit/2980cdc)) Implementation of `GET /api/projects/check-name`. Implements [Path 1.1.3](#Path-1.1.3). |
 | <a id="TSK-MIG-008"></a>**TSK-MIG-008** | Frontend | `install.js` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [79aaf4a](https://github.com/xify-in/xify.in/commit/79aaf4a)) Integrated into the modern settings modal logic. Implements [Path 1.1.4.1](#Path-1.1.4.1). |
 | <a id="TSK-MIG-010"></a>**TSK-MIG-010** | Backend | `backend/main.py` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [2c59468](https://github.com/xify-in/xify.in/commit/2c59468)) `POST /api/projects` upsert for grid & project metadata. Implements [Path 1.1.4.1.2](#Path-1.1.4.1.2). |
-| <a id="TSK-MIG-011"></a>**TSK-MIG-011** | Frontend | `opssim_projects.html` | Choice Modal (VIEW vs EDIT) for existing project clicks. Implements [Path 1.2](#Path-1.2). |
+| <a id="TSK-MIG-011"></a>**TSK-MIG-011** | Frontend | `opssim_projects.html` | Project Access Mode: VIEW vs EDIT Selection for existing project clicks. Implements [Path 1.2](#Path-1.2). |
 | <a id="TSK-MIG-014"></a>**TSK-MIG-014** | Backend | `backend/main.py` | `POST /api/projects/clone` to increment version. Implements [Path 1.2.1.2](#Path-1.2.1.2). |
 | <a id="TSK-MIG-015"></a>**TSK-MIG-015** | Frontend | `install.js` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [79aaf4a](https://github.com/xify-in/xify.in/commit/79aaf4a)) Refactored Settings Modal to `install.js` with server-side name check interceptor. Implements [Path 1.1.4](#Path-1.1.4). |
 | <a id="TSK-MIG-016"></a>**TSK-MIG-016** | Fullstack | `backend/main.py` & `install.js` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [625027b](https://github.com/xify-in/xify.in/commit/625027b)) Server-gated object schema delivery via `/api/objects/schema`. Includes **v3d_prefix fallback** to support property window lookups by scene name. |
