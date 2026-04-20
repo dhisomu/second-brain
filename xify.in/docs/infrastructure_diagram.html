@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xify - Master Data Flow Diagram</title>
+    <!-- html2canvas for PNG export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+
+        let currentTheme = 'default';
+
+        function initMermaid(theme) {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: theme,
+                securityLevel: 'loose'
+            });
+        }
+
+        // Initial load
+        initMermaid(currentTheme);
+
+        // Global functions for buttons
+        window.toggleTheme = async function () {
+            const body = document.documentElement;
+            const container = document.querySelector('.mermaid-container');
+            const graphDef = container.getAttribute('data-graph');
+
+            if (currentTheme === 'default') {
+                currentTheme = 'dark';
+                body.setAttribute('data-theme', 'dark');
+            } else {
+                currentTheme = 'default';
+                body.setAttribute('data-theme', 'light');
+            }
+
+            // Re-render mermaid
+            initMermaid(currentTheme);
+            const { svg } = await mermaid.render('mermaid-svg', graphDef);
+            container.innerHTML = svg;
+        };
+
+        window.exportPNG = function () {
+            const container = document.querySelector('.diagram-wrapper');
+            html2canvas(container, {
+                scale: 3, // High resolution
+                backgroundColor: currentTheme === 'dark' ? '#2d2d2d' : '#ffffff'
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `xify_infrastructure_${currentTheme}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        };
+
+        window.exportSVG = function () {
+            const svgElement = document.querySelector('.mermaid-container svg');
+            if (!svgElement) return;
+
+            // Add XML declaration and clone
+            const svgData = new XMLSerializer().serializeToString(svgElement);
+            const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `xify_infrastructure_${currentTheme}.svg`;
+            link.click();
+        }
+
+        // Render initial graph
+        window.addEventListener('DOMContentLoaded', async () => {
+            const container = document.querySelector('.mermaid-container');
+            const graphDef = container.getAttribute('data-graph');
+            const { svg } = await mermaid.render('mermaid-svg', graphDef);
+            container.innerHTML = svg;
+        });
+
+    </script>
+    <style>
+        :root {
+            --bg-color: #f6f8fa;
+            --box-bg: #ffffff;
+            --text-color: #24292f;
+            --link-color: #0366d6;
+            --btn-bg: #eaeeff;
+            --btn-border: #acc2ff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0d1117;
+            --box-bg: #22272e;
+            --text-color: #c9d1d9;
+            --link-color: #58a6ff;
+            --btn-bg: #30363d;
+            --btn-border: #8b949e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .header-controls {
+            display: flex;
+            width: 95vw;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: var(--btn-bg);
+            color: var(--text-color);
+            border: 1px solid var(--btn-border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            filter: brightness(0.9);
+        }
+
+        .diagram-wrapper {
+            background: var(--box-bg);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 95vw;
+            height: calc(100vh - 120px);
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mermaid-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mermaid-container svg {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-controls">
+        <a href="infrastructure_overview.md" class="back-link">← Back to Docs</a>
+        <div class="buttons">
+            <button onclick="toggleTheme()">🌓 Toggle Dark/Light</button>
+            <button onclick="exportPNG()">📸 Export HD PNG</button>
+            <button onclick="exportSVG()">🖼️ Export SVG</button>
+        </div>
+    </div>
+
+    <div class="diagram-wrapper">
+        <div class="mermaid-container" data-graph='graph TD
+    User((External User)) -->|HTTPS| Traefik["Traefik Ingress (Edge Proxy)"]
+    
+    subgraph "Production Environment (xify.in)"
+        Traefik -->|Host: xify.in| N_Prod["Nginx (xify-in)"]
+        N_Prod <--> B_Prod["Backend (xify-backend)"]
+        B_Prod -.-> DB_Prod[("SQLite (forum.db)")]
+    end
+
+    subgraph "Staging Environment (stage.xify.in)"
+        Traefik -->|Host: stage.xify.in| N_Stage["Nginx (stage.xify.in)"]
+        N_Stage <--> B_Stage["Backend (xify-backend-stage)"]
+        B_Stage -.-> DB_Stage[("SQLite (forum_stage.db)")]
+    end
+
+    subgraph "Development Environment (dev.xify.in)"
+        Traefik -->|Host: dev.xify.in| N_Dev["Nginx (dev.xify.in)"]
+        N_Dev <--> B_Dev["Backend (xify-backend-dev)"]
+        B_Dev -.-> DB_Dev[("SQLite (forum_dev.db)")]
+    end
+
+    %% Internal Data Flow (Simplified for all environments)
+    subgraph "Internal Stack Logic (Typical)"
+        H_UI["Frontend UI<br/>(index.html)"] -->|API Call| P_API["FastAPI Handler<br/>(main.py)"]
+        P_API <-->|Schema| M_Models["SQLModel<br/>(models.py)"]
+        M_Models <-->|Query| D_DB["Database<br/>(.db file)"]
+    end
+
+    classDef prod fill:#e1f5fe,stroke:#01579b;
+    classDef stage fill:#fff9c4,stroke:#fbc02d;
+    classDef dev fill:#f1f8e9,stroke:#33691e;
+    
+    class N_Prod,B_Prod prod;
+    class N_Stage,B_Stage stage;
+    class N_Dev,B_Dev dev;'>
+        </div>
+    </div>
+</body>
+
+</html>
