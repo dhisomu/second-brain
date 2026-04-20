@@ -3,11 +3,19 @@
 **Objective**: Move key operations and variables from the client-side (v3d/js) to the server-side (FastAPI/Postgres).
 
 ## Overall Migration Progress
+
+### Phase 1: Project Metadata & Security
 1. ✅ **TSK-MIG-015 / 010**: Project & Grid Settings Modal (Refactored to `install.js`)
 2. ✅ **TSK-MIG-016**: Secure Object Schema Delivery (Server-Gated & Fallback Lookup)
 3. ⏳ **TSK-MIG-011**: Project Access Mode: VIEW vs EDIT Selection - **[NEXT]**
 4. ⏳ **TSK-MIG-014**: Backend logic for Snapshot Cloning (Version Incrementing)
 5. ⏳ **TSK-MIG-017**: Fix Broken Snapshot Link in duplicate name alerts
+
+### Phase 2: Real-Time State Synchronization (Thin Client Execution)
+*Goal: Move `objs to save`, `connector info`, and `simdata` to incremental, server-side truth.*
+6. ⏳ **TSK-MIG-018**: Incremental Object Property Sync (Real-time updates to server exclusively on object/property change)
+7. ⏳ **TSK-MIG-019**: Incremental Connector Logic (Move `connector_info` processing to backend)
+8. ⏳ **TSK-MIG-020**: Deprecate Monolithic Client-Side Save (Remove full state assembly from frontend)
 
 ## Why this matters?
 - **Security**: Prevents users from modifying cost/timing variables in the browser console.
@@ -53,6 +61,9 @@
 | <a id="TSK-MIG-015"></a>**TSK-MIG-015** | Frontend | `install.js` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [79aaf4a](https://github.com/xify-in/xify.in/commit/79aaf4a)) Refactored Settings Modal to `install.js` with server-side name check interceptor. Implements [Path 1.1.4](#Path-1.1.4). |
 | <a id="TSK-MIG-016"></a>**TSK-MIG-016** | Fullstack | `backend/main.py` & `install.js` | [**IN REVIEW**] (Repo: xify.in, Branch: proDev, Commit: [625027b](https://github.com/xify-in/xify.in/commit/625027b)) Server-gated object schema delivery via `/api/objects/schema`. Includes **v3d_prefix fallback** to support property window lookups by scene name. |
 | <a id="TSK-MIG-017"></a>**TSK-MIG-017** | Frontend | `install.js` | Fix Broken "View Latest Snapshot" link — must use `project_name` and `version` params instead of raw JSON path. Implements [Path 1.1.5](#Path-1.1.5). |
+| <a id="TSK-MIG-018"></a>**TSK-MIG-018** | Fullstack | `backend/main.py` & `visual_logic.js` | Send `simdata`/`ObjProp` updates directly to a new `PUT /api/objects/{id}` endpoint on value change, removing reliance on `objs to save` string buildup. |
+| <a id="TSK-MIG-019"></a>**TSK-MIG-019** | Fullstack | `backend/main.py` & `visual_logic.js` | Sync `connector_info` immediately to a new `POST/DELETE /api/connectors` endpoint when a connection is formed or broken. |
+| <a id="TSK-MIG-020"></a>**TSK-MIG-020** | Frontend | `visual_logic.js` | Remove monolithic `"cloudSave?"` logic. Replacing it with a minimal signaling call `POST /api/projects/snapshot` where the backend assembles the final JSON state from its existing tracked data. |
 
 ## Acceptance Criteria (Given-When-Then) & Test Cases (Arrange-Act-Assert)
 
