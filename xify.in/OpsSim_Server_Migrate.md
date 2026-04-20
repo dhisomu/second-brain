@@ -17,6 +17,17 @@
 7. ⏳ **TSK-MIG-019**: Incremental Connector Logic (Move `connector_info` processing to backend)
 8. ⏳ **TSK-MIG-020**: Deprecate Monolithic Client-Side Save (Remove full state assembly from frontend)
 
+### Phase 3: Security & Session Hardening
+*Goal: Prevent session hijacking and enforce strict access controls.*
+9. ⏳ **TSK-MIG-021**: Reduce Session Expiry (Drop `max_age` from 7 days to 24 hours in Main Backend)
+10. ⏳ **TSK-MIG-022**: Implement User-Agent Fingerprinting (Bind session token to browser string; invalidate if changed)
+
+> [!NOTE]
+> **Why not track MAC or IP Addresses?**
+> *   **MAC Addresses**: Operate at Layer 2 (hardware) and are stripped by the first router. A web server cannot see a client's true MAC address unless a native desktop agent is installed, which breaks the "Thin Client" philosophy.
+> *   **IP Addresses**: Binding sessions strictly to IPs is dangerous for modern web apps. Users on mobile hotspots, corporate VPNs, or satellite ISPs often have dynamic IPs that change mid-session, which would result in aggressive false-positive logouts.
+> *   **Solution**: Browser Fingerprinting (User-Agent) + Rolling Tokens (Shorter Expiry) is the industry standard.
+
 ## Why this matters?
 - **Security**: Prevents users from modifying cost/timing variables in the browser console.
 - **Consistency**: Centralizes the "Source of Truth" in the database.
