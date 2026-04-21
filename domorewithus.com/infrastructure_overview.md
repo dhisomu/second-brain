@@ -57,6 +57,9 @@ Each stack is isolated via dedicated Docker bridge networks. The internal IP add
 | **Landing Page** | `domorewithus.com` | `172.30.0.10` | `dmwu-prod-net` | Production |
 | **Landing Page** | `stage.domorewithus.com` | `172.30.1.10` | `dmwu-stage-net` | Staging |
 | **Landing Page** | `dev.domorewithus.com` | `172.30.2.10` | `dmwu-dev-net` | Development |
+| **Xelify Portal** | `xelify.in` | `172.22.0.10` | `xelify-prod-net` | Production |
+| **Xelify Portal** | `stage.xelify.in` | `172.22.1.10` | `xelify-stage-net` | Staging |
+| **Xelify Portal** | `dev.xelify.in` | `172.22.2.10` | `xelify-dev-net` | Development |
 | **OpenSign Client** | `dmwu-sign-dev-client` | `172.30.30.30` | `dmwu-sign-dev-net` | Development |
 | **OpenSign API** | `dmwu-sign-dev-server` | `172.30.30.20` | `dmwu-sign-dev-net` | Development |
 | **OpenSign DB** | `dmwu-sign-dev-mongo` | `172.30.30.10` | `dmwu-sign-dev-net` | Development |
@@ -64,9 +67,12 @@ Each stack is isolated via dedicated Docker bridge networks. The internal IP add
 ### 🛠️ Reserved Subnets
 | Stack | Subnet | Use Case |
 | :--- | :--- | :--- |
-| **Prod Stack** | `172.30.0.0/24` | Main Landing Page & Production Tools |
-| **Stage Stack** | `172.30.1.0/24` | High-Fidelity QA & Staging |
-| **Dev Stack** | `172.30.2.0/24` | Portal Development & Rapid UI Testing |
+| **Prod Stack** | `172.30.0.0/24` | DM-W-U Main Landing Page |
+| **Stage Stack** | `172.30.1.0/24` | DM-W-U High-Fidelity QA |
+| **Dev Stack** | `172.30.2.0/24` | DM-W-U Portal Development |
+| **Xelify Prod** | `172.22.0.0/24` | Xelify Main Portal |
+| **Xelify Stage** | `172.22.1.0/24` | Xelify Staging/QA |
+| **Xelify Dev** | `172.22.2.0/24` | Xelify Development |
 | **Sign Dev Stack** | `172.30.30.0/24`| OpenSign Application Development |
 
 ---
