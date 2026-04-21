@@ -1,6 +1,17 @@
 # OpenSign Infrastructure Deployment Plan
 
-This document outlines the architecture and deployment strategy for the OpenSign platform on the `domorewithus.com` domain, following the **Triple-Stack Subdomain Strategy**.
+This document outlines the architecture and deployment strategy for the OpenSign platform and the DoMoreTech Portal on the `domorewithus.com` domain, following the **Triple-Stack Subdomain Strategy**.
+
+## 🚦 Current Project Status
+
+| Milestone | Status | Details |
+| :--- | :--- | :--- |
+| **OpenSign (Dev)** | ✅ **LIVE** | Serving at `sign.dev.domorewithus.com` |
+| **DoMoreTech Portal (Dev)** | ✅ **LIVE** | Premium landing page at `dev.domorewithus.com` |
+| **GitHub Integration** | ✅ **DONE** | Repository `dhisomu/domorewithus.com` initialized. |
+| **DNS Setup** | ✅ **DONE** | Global IP reservations and DNS registry finalized. |
+| **Staging Promotion** | ⏳ PENDING | Mirroring code to `stage` branch/environment. |
+| **Production Promotion** | ⏳ PENDING | Final rollout to `master` branch and root domain. |
 
 ## 🗺️ System Architecture
 
@@ -62,15 +73,20 @@ Each environment consists of three primary services managed via `docker-compose.
 
 ## 🛠️ Execution & Integration Plan
 
-### Phase 1: Environment Baseline (DEV)
-1.  **Directory Setup**: Create `/srv/domorewithus.com/dev/sign/` base directory.
-2.  **Secrets Management**: Provision `.env` with unique `MASTER_KEY` and local storage flags.
-3.  **Network Init**: Define the `172.30.30.0/24` subnet in the compose file.
-4.  **Traefik Linking**: Apply standard labels for TLS and PathPrefix routing.
+### Phase 1: Infrastructure & Core Ops (DONE)
+1.  **IP Reservations**: Reserved `172.30.0.0/16` for DM-W-U ecosystem.
+2.  **OpenSign Dev**: Deployed Node/Mongo stack via `docker-compose`.
+3.  **Git Ops**: Created `domorewithus.com` repo and established `dev`/`stage`/`master` branching.
 
-### Phase 2: App Integration
-*   Configure the backend to use local file storage (`USE_LOCAL=TRUE`) for document persistence.
-*   Mount persistent volumes for MongoDB (`mongo-data`) and OpenSign files (`opensign-files`).
+### Phase 2: Web Excellence (IN PROGRESS)
+1.  **Dev Portal**: Implemented premium landing page in `/srv/dev.domorewithus.com` (Tracks `dev` branch).
+2.  **Branding**: Integrated official logo and "Dr. Somasundaram B & Mr. Balasubramaniam R" founder story.
+3.  **Optimization**: Enabled Brotli/Gzip compression in the Nginx-Brotli stack.
+
+### Phase 3: Promotion & Launch (PENDING)
+1.  **Staging**: Merge `dev` -> `stage` and deploy to `/srv/stage.domorewithus.com`.
+2.  **Production**: Merge `stage` -> `master` and deploy to `/srv/domorewithus.com`.
+3.  **Final Polish**: Verify mobile responsiveness and form logic across all stacks.
 
 ---
 
