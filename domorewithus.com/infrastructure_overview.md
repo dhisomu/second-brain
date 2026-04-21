@@ -1,4 +1,4 @@
-# OpenSign Infrastructure Deployment Plan
+# DoMoreTech Infrastructure Overview
 
 This document outlines the architecture and deployment strategy for the OpenSign platform and the DoMoreTech Portal on the `domorewithus.com` domain, following the **Triple-Stack Subdomain Strategy**.
 
@@ -47,15 +47,27 @@ graph TD
 
 ---
 
-## 🌍 Network IP Address Reservations
+## 🧬 Network Topology & IP Registry
 
-To prevent collisions with existing `xelify.in` services, a dedicated private IP series has been reserved for the DoMoreWithUs infrastructure.
+Each stack is isolated via dedicated Docker bridge networks. The internal IP addresses are static and pinned to prevent routing collisions.
 
-| Environment | subdomain | IP Subnet | Docker Network Name |
-| :--- | :--- | :--- | :--- |
-| **Development** | `sign.dev.domorewithus.com` | `172.30.30.0/24` | `dmwu-sign-dev-net` |
-| **Staging** | `sign.stage.domorewithus.com` | `172.30.20.0/24` | `dmwu-sign-stage-net` |
-| **Production** | `sign.domorewithus.com` | `172.30.10.0/24` | `dmwu-sign-prod-net` |
+### 🌐 Hub & Vertical Ports
+| Service | Container Name | Internal IP | Network | Environment |
+| :--- | :--- | :--- | :--- | :--- |
+| **Landing Page** | `domorewithus.com` | `172.30.0.10` | `dmwu-prod-net` | Production |
+| **Landing Page** | `stage.domorewithus.com` | `172.30.1.10` | `dmwu-stage-net` | Staging |
+| **Landing Page** | `dev.domorewithus.com` | `172.30.2.10` | `dmwu-dev-net` | Development |
+| **OpenSign Client** | `dmwu-sign-dev-client` | `172.30.30.30` | `dmwu-sign-dev-net` | Development |
+| **OpenSign API** | `dmwu-sign-dev-server` | `172.30.30.20` | `dmwu-sign-dev-net` | Development |
+| **OpenSign DB** | `dmwu-sign-dev-mongo` | `172.30.30.10` | `dmwu-sign-dev-net` | Development |
+
+### 🛠️ Reserved Subnets
+| Stack | Subnet | Use Case |
+| :--- | :--- | :--- |
+| **Prod Stack** | `172.30.0.0/24` | Main Landing Page & Production Tools |
+| **Stage Stack** | `172.30.1.0/24` | High-Fidelity QA & Staging |
+| **Dev Stack** | `172.30.2.0/24` | Portal Development & Rapid UI Testing |
+| **Sign Dev Stack** | `172.30.30.0/24`| OpenSign Application Development |
 
 ---
 
