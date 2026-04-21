@@ -77,7 +77,9 @@ Each environment consists of three primary services managed via `docker-compose.
 ## ⚠️ User Review Required
 
 > [!IMPORTANT]
-> **DNS Configuration Reminder**
+> **DNS Configuration & Registry**
+> A full record of all DNS settings (including Email, Security, and App routing) is now maintained in the **[dns_registry.md](dns_registry.md)**.
+>
 > Please ensure that `*.domorewithus.com` and `*.dev.domorewithus.com` are pointed to the server IP (`129.159.226.144`). Traefik requires DNS resolution to complete the Let's Encrypt TLS handshake.
 
 > [!WARNING]
