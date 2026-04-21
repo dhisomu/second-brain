@@ -60,3 +60,21 @@ All core services are configured with `restart: always` to ensure high availabil
 
 ---
 *Last updated: March 3, 2026*
+
+## 🌍 Global IP Address Reservations
+
+To ensure network isolation and prevent IP collisions, the following subnets are reserved on this server:
+
+| Octet Range | Domain / Project | Environment | Subnet |
+| :--- | :--- | :--- | :--- |
+| **172.17.x.x** | *Docker Default* | Bridge | 172.17.0.0/16 |
+| **172.21.x.x** | **xelify.in** | Prod | 172.21.0.0/16 |
+| **172.23.x.x** | **xify.in** | Dev | 172.23.0.0/16 |
+| **172.24.x.x** | **xify.in** | Stage | 172.24.0.0/16 |
+| **172.30.x.x** | **domorewithus.com** | **RESERVED** | 172.30.0.0/16 |
+
+> [!NOTE]
+> When spinning up new stacks for `domorewithus.com`, please use the `172.30.x.x` series (specifically `.30` for Dev, `.20` for Stage, and `.10` for Prod) to maintain consistency and isolation.
+
+---
+*Last updated: April 21, 2026*
