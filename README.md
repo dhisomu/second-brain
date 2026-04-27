@@ -10,6 +10,9 @@ Welcome to the Xify Knowledge Base. This repository tracks infrastructure decisi
 *   [**xelify.in**](./xelify.in/)
     *   [🏗️ Infrastructure Overview](./xelify.in/README.md) - Subnets, IPs, and Isolated Stack Strategy.
     *   [📜 Legacy System Architecture](./xelify.in/system_architecture.md) - Core components and maintenance schedule.
+*   [**domorelabs.in**](./domorelabs.in/)
+    *   [🏗️ Infrastructure Overview](./domorelabs.in/README.md) - Triple-stack deployment and branch mapping.
+    *   [📜 System Architecture](./domorelabs.in/system_architecture.md) - Subnets and internal IP allocations.
 
 ## 🛡️ Global Best Practices
 *   **The "Ping First" Rule**: Always verify DNS propagation before starting any Traefik-labeled containers.
