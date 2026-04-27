@@ -1,28 +1,36 @@
-# 🧠 Second Brain - Home
+# 🧠 Second Brain - Global Infrastructure Hub
 
-Welcome to the Xify Knowledge Base. This repository tracks infrastructure decisions, architecture patterns, and migration guides.
+Welcome to the **Master Knowledge Base** for the `opssim-prod-vnic` server. This repository is the source of truth for infrastructure decisions, network architecture, and deployment patterns across all projects.
 
-## 📂 Projects
-*   [**xify.in**](./xify.in/)
-    *   [🐘 PostgreSQL Management Guide](./xify.in/postgresql_guide.md)
-    *   [🏗️ Migration Strategy & Lessons](./xify.in/migration_sqlite_to_postgresql.md)
-    *   [📜 Step-by-Step Walkthrough (Apr 18)](./xify.in/migration_walkthrough_2026_04_18.md)
-*   [**xelify.in**](./xelify.in/)
-    *   [🏗️ Infrastructure Overview](./xelify.in/README.md) - Subnets, IPs, and Isolated Stack Strategy.
-    *   [📜 Legacy System Architecture](./xelify.in/system_architecture.md) - Core components and maintenance schedule.
-*   [**domorelabs.in**](./domorelabs.in/)
-    *   [🏗️ Infrastructure Overview](./domorelabs.in/README.md) - Triple-stack deployment and branch mapping.
-    *   [📜 System Architecture](./domorelabs.in/system_architecture.md) - Subnets and internal IP allocations.
-
-## 🛡️ Global Best Practices
-*   **The "Ping First" Rule**: Always verify DNS propagation before starting any Traefik-labeled containers.
-    *   `ping -c 1 subdomain.xify.in`
-*   **Prefix Isolation**: Use `prodev-` or `prostage-` prefixes for all new stacks.
-*   **Zero-Downtime Config**: Always test Nginx config with `docker-compose exec xify-in nginx -t` before restarting.
-*   [**🛠️ Maintenance & Health Checks**](./maintenance.md) - Backup verification and server sizing commands.
-
-## 🚀 Pending Tasks
-- [⏳ Client-to-Server Logic Migration](./xify.in/task_client_to_server_migration.md)
+## 🏗️ Master Architecture
+> [!IMPORTANT]
+> **[Master Architecture Guide](./master_architecture.md)** — Start here for a global view of all domains, IP reservations, and Triple-Stack isolation strategies.
 
 ---
-*Last Updated: 2026-04-18*
+
+## 📂 Projects
+*   [**xify.in**](./xify.in/) — 3D Visualization Platform.
+    *   [Infrastructure Overview](./xify.in/docs/infrastructure_overview.md)
+    *   [PostgreSQL Management Guide](./xify.in/docs/migration_sqlite_to_postgresql.md)
+*   [**xelify.in**](./xelify.in/) — Core Infrastructure & Edge Proxy.
+    *   [System Architecture](./xelify.in/system_architecture.md) — Subnets, Traefik, and Watchtower.
+*   [**domorelabs.in**](./domorelabs.in/) — Training & LMS Platform.
+    *   [System Architecture](./domorelabs.in/system_architecture.md) — Triple-stack (Dev/Stage/Prod) mappings.
+
+---
+
+## 📖 How to Document (Second Brain Standards)
+To maintain clarity as the infrastructure grows, follow these standards when adding new documentation:
+
+1.  **Architecture First**: Every project must have a `system_architecture.md` defining its network subnet and internal IP logic.
+2.  **Mermaid Diagrams**: Use Mermaid for flows to keep them editable within Markdown.
+3.  **Cross-References**: Always link back to the `master_architecture.md` if a change affects global IP reservations.
+4.  **Date Everything**: Use the `*Last updated:*` footer to track document freshness.
+
+## 🛡️ Global Best Practices
+*   **The "IP Check" Rule**: Before spinning up a new container, check [master_architecture.md](./master_architecture.md) to ensure no subnet overlaps.
+*   **Prefix Isolation**: Use `dml-`, `xify-`, or `xl-` prefixes for all service names in Docker Compose.
+*   **Maintenance**: Reference [🛠️ Maintenance & Health Checks](./maintenance.md) for backup verification procedures.
+
+---
+*Last Updated: April 27, 2026*
