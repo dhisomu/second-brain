@@ -5,6 +5,8 @@ Welcome to the **Master Knowledge Base** for the `opssim-prod-vnic` server. This
 ## 🏗️ Master Architecture
 > [!IMPORTANT]
 > **[Master Architecture Guide](./master_architecture.md)** — Start here for a global view of all domains, IP reservations, and Triple-Stack isolation strategies.
+>
+> **[SMTP Master Architecture](./SMTP_MasterArch.md)** — Deep dive into SMTP configuration, GoDaddy/Titan integration, and "Gold Standard" auth patterns.
 
 ---
 
