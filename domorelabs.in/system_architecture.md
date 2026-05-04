@@ -1,70 +1,67 @@
-# Infrastructure Overview: DoMoreLabs.in
+# Infrastructure Overview: DoMoreLabs.in (Moodle SCORM Platform)
 
 This document provides a detailed overview of the core infrastructure services running for the `domorelabs.in` project on the `opssim-prod-vnic` server.
 
 ## 🏗 System Architecture
 
-The project follows a "Triple-Stack" architecture (Dev, Stage, Prod) managed via Docker Compose, utilizing Traefik as the reverse proxy for SSL termination and routing.
+The project follows a "Triple-Stack" architecture (Dev, Stage, Prod) managed via Docker Compose. Each stack uses a high-performance Nginx + PHP-FPM + MariaDB configuration, secured by Traefik.
 
 ```mermaid
 graph TD
     Client["🌐 External Client (HTTPS)"] --> Traefik["🛡 Traefik (Edge Proxy)"]
     
-    Traefik --> Prod["🌍 domorelabs.in (FastAPI)"]
-    Traefik --> Stage["🧪 stage.domorelabs.in (FastAPI)"]
-    Traefik --> Dev["🛠 dev.domorelabs.in (FastAPI)"]
+    Traefik --> NginxProd["🌍 domorelabs.in (Nginx)"]
+    Traefik --> NginxStage["🧪 stage.domorelabs.in (Nginx)"]
+    Traefik --> NginxDev["🛠 dev.domorelabs.in (Nginx)"]
     
-    Prod -.-> MSGraph["📧 MS Graph API"]
-    Stage -.-> MSGraph
-    Dev -.-> MSGraph
+    NginxProd --> AppProd["📦 dml-prod-app (PHP-FPM)"]
+    NginxStage --> AppStage["📦 dml-stage-app (PHP-FPM)"]
+    NginxDev --> AppDev["📦 dml-dev-app (PHP-FPM)"]
+    
+    AppProd --> DBProd["🗄 dml-prod-db (MariaDB)"]
+    AppStage --> DBStage["🗄 dml-stage-db (MariaDB)"]
+    AppDev --> DBDev["🗄 dml-dev-db (MariaDB)"]
 ```
 
 ## 📦 Environments
 
 ### 🛠 1. Development (`dev.domorelabs.in`)
 - **Location**: `/srv/dev.domorelabs.in`
-- **Branch**: `dev`
 - **Subnet**: `172.40.2.0/24`
-- **Internal IP**: `172.40.2.10`
-- **Role**: Active development and testing of new features.
+- **IPs**: App `.10`, DB `.20`, Nginx `.30`
 
 ### 🧪 2. Staging (`stage.domorelabs.in`)
 - **Location**: `/srv/stage.domorelabs.in`
-- **Branch**: `stage`
 - **Subnet**: `172.40.1.0/24`
-- **Internal IP**: `172.40.1.10`
-- **Role**: Pre-production validation and client review.
+- **IPs**: App `.10`, DB `.20`, Nginx `.30`
 
 ### 🌍 3. Production (`domorelabs.in`)
 - **Location**: `/srv/domorelabs.in`
-- **Branch**: `master`
 - **Subnet**: `172.40.0.0/24`
-- **Internal IP**: `172.40.0.10`
-- **Hostnames**: `domorelabs.in`, `www.domorelabs.in`
-- **Role**: Live production environment.
+- **IPs**: App `.10`, DB `.20`, Nginx `.30`
 
 ## ⚙️ Operational Details
 
 ### 📂 Directory Structure
-| Service | Data Directory | Git Branch |
+| Service | Data Directory | Role |
 | :--- | :--- | :--- |
-| **Production** | `/srv/domorelabs.in` | `master` |
-| **Staging** | `/srv/stage.domorelabs.in` | `stage` |
-| **Development** | `/srv/dev.domorelabs.in` | `dev` |
+| **App Code** | `/var/www/html` | Moodle Source Code |
+| **Data** | `/var/www/moodledata` | Moodle Files & Cache |
+| **DB Data** | `./mariadb_data` | Persistent Database Storage |
 
 ### 🛠 Technology Stack
-- **Backend**: Python 3.13 (FastAPI)
-- **Frontend**: Vanilla HTML/CSS/JS (Tailwind via CDN)
+- **Web Server**: Nginx (Stable-Alpine)
+- **Application**: Moodle 4.4+ (PHP 8.3-FPM)
+- **Database**: MariaDB 11.4
 - **Proxy**: Traefik v3 (SSL via Let's Encrypt)
-- **Email**: Microsoft Graph API
 
 ---
 *Last updated: April 27, 2026*
 
 ## 🌍 IP Address Reservations (Project Specific)
 
-| Domain | Environment | Subnet | IP Reservation |
+| Domain | Environment | Subnet | IP Allocation |
 | :--- | :--- | :--- | :--- |
-| **domorelabs.in** | Prod | 172.40.0.0/24 | 172.40.0.10 |
-| **domorelabs.in** | Stage | 172.40.1.0/24 | 172.40.1.10 |
-| **domorelabs.in** | Dev | 172.40.2.0/24 | 172.40.2.10 |
+| **domorelabs.in** | Prod | 172.40.0.0/24 | .10 (App), .20 (DB), .30 (Nginx) |
+| **domorelabs.in** | Stage | 172.40.1.0/24 | .10 (App), .20 (DB), .30 (Nginx) |
+| **domorelabs.in** | Dev | 172.40.2.0/24 | .10 (App), .20 (DB), .30 (Nginx) |
