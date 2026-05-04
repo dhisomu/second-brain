@@ -43,7 +43,7 @@ The backend is built as a robust FastAPI router with advanced security and backg
 3. **Admin Controls**: A hardcoded list (`ADMIN_EMAILS`) restricts critical actions like changing categories, statuses, or posting announcements.
 
 ### 📧 Communication & Notifications
-The forum uses **Mailjet API** for real-time engagement:
+The forum uses **SMTP (via GoDaddy)** for real-time engagement:
 - **Status Updates**: Automatically notifies the creator when an admin resolves or closes their issue.
 - **Mentions**: Custom regex detects `@user@domain.com` and triggers notification emails.
 - **Background Execution**: All emails are sent via FastAPI `BackgroundTasks` to ensure zero impact on UI responsiveness.

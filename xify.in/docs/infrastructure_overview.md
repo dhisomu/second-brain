@@ -214,44 +214,54 @@ Below is a mapping of how the frontend components interact with these backend se
 
 ---
 
-## 📧 Email Delivery Monitoring (Mailjet Webhook)
+## 🛠️ Environment Configuration (.env)
 
-OTP emails are sent via the **Mailjet API** (`v3.1/send`). To track delivery status in real-time, a webhook integration was added.
+The behavior of the backend and the Docker orchestration is governed by a **`.env` file** at the repository root. This file contains critical secrets (SMTP passwords) and path configurations.
+
+> [!IMPORTANT]
+> For a full list of environment variables and a setup template, see the **[Infrastructure Configuration Guide](infrastructure_configuration.md#8-environment-configuration-env)**.
+
+---
+
+
+## 📧 Email Delivery System (SMTP)
+
+OTP emails are sent via **SMTP** using the **info@xify.in** account hosted on **GoDaddy**.
 
 ### Architecture
 
 ```mermaid
 graph LR
     subgraph "Xify Backend"
-        SendEmail["send_email() → Mailjet API"]
-        Webhook["POST /webhooks/mailjet"]
+        SendEmail["send_email() → smtplib"]
         DB[("EmailDeliveryLog table")]
     end
 
-    subgraph "Mailjet"
-        MJ_API["Mailjet Send API"]
-        MJ_Events["Mailjet Event Engine"]
+    subgraph "GoDaddy SMTP"
+        SMTP_Server["smtpout.secureserver.net:465"]
     end
 
-    SendEmail -->|"HTTP POST (OTP payload)"| MJ_API
-    MJ_API -->|"MessageID returned"| SendEmail
+    subgraph "Recipient"
+        UserMail["User Inbox"]
+    end
+
+    SendEmail -->|"SMTP AUTH (SSL)"| SMTP_Server
+    SMTP_Server -->|"Delivers Email"| UserMail
     SendEmail -->|"Log 'accepted' event"| DB
-    MJ_Events -->|"bounce/delivered/spam/blocked"| Webhook
-    Webhook -->|"Log delivery event"| DB
 ```
 
-### Single-URL Strategy
-Mailjet allows **one webhook URL per event type per account**. Since both production and staging share the same Mailjet API key, all delivery events are routed to the **production** endpoint:
+### Configuration Details
+The backend uses the following configuration from `.env`:
+*   **SMTP Host:** `smtpout.secureserver.net`
+*   **SMTP Port:** `465` (SSL)
+*   **SMTP User:** `info@xify.in`
+*   **Sender Display Name:** `Xify`
 
-| Event Type | Webhook URL |
-|:-----------|:------------|
-| Sent | `https://xify.in/webhooks/mailjet` |
-| Bounce | `https://xify.in/webhooks/mailjet` |
-| Blocked | `https://xify.in/webhooks/mailjet` |
-| Spam | `https://xify.in/webhooks/mailjet` |
+### Email Delivery Logging
+When an email is successfully handed off to the SMTP server, the backend logs an `accepted` event in the `EmailDeliveryLog` table. 
 
 > [!NOTE]
-> Staging email events also appear in the **production** `EmailDeliveryLog` because both environments use the same Mailjet account. Query by email address to filter.
+> Unlike the previous Mailjet implementation, standard SMTP delivery does not provide real-time webhooks for 'delivered', 'opened', or 'bounce' events. The logs will primarily confirm that the email was successfully sent from the Xify server.
 
 ### Querying Delivery Logs
 ```bash
@@ -266,32 +276,28 @@ sqlite3 ../backend_data/database.db \
 
 ### Debugging & Testing Email Delivery
 
-If OTP emails are not arriving, use these Mailjet REST API commands to diagnose:
+If OTP emails are not arriving, check the backend logs and verify SMTP connectivity:
 
-```bash
-# Check delivery status for a specific recipient
-curl -s -u $MAILJET_API_KEY:$MAILJET_SECRET_KEY \
-  "https://api.mailjet.com/v3/REST/message?ContactAlt=user@example.com&Limit=5&Sort=ArrivedAt+DESC" \
-  | python3 -m json.tool
+1. **Check Backend Logs:**
+   Look for "OTP email sent to..." or "Error sending email via SMTP..." in the application logs.
+   ```bash
+   tail -f /srv/xify.in/backend_data/log_main.txt
+   ```
 
-# Check status of a specific MessageID (from EmailDeliveryLog)
-curl -s -u $MAILJET_API_KEY:$MAILJET_SECRET_KEY \
-  "https://api.mailjet.com/v3/REST/message/MESSAGE_ID_HERE" \
-  | python3 -m json.tool
-```
+2. **Verify Credentials in .env:**
+   Ensure `SMTP_USER` and `SMTP_PASS` are correct.
+   ```bash
+   grep SMTP /srv/xify.in/.env
+   ```
 
-**Key `Status` values in the API response:**
-| Status | Meaning |
-|:-------|:--------|
-| `queued` | Mailjet accepted but hasn't sent yet |
-| `sent` | Dispatched to recipient's mail server |
-| `opened` | Recipient opened the email (confirmed delivery) |
-| `bounced` | Recipient server rejected the email |
-| `blocked` | Mailjet blocked it (policy/reputation) |
-| `spam` | Recipient marked it as spam |
+3. **Check SMTP Connectivity:**
+   Test if the server can reach the GoDaddy SMTP server on port 465.
+   ```bash
+   nc -zv smtpout.secureserver.net 465
+   ```
 
 > [!WARNING]
-> **Known issue:** High-volume testing (e.g., rapid OTP requests to disposable domains like Mailinator) can trigger Mailjet's anti-abuse rate limiter, causing emails to be delayed by **hours**. Keep test volumes moderate to avoid throttling.
+> **Spam Folders:** Since emails are sent via a standard SMTP account (`info@xify.in`), they may occasionally be flagged as spam by aggressive filters (e.g., Gmail, Outlook). Encourage users to check their junk folders if the code doesn't arrive.
 
 Get ip address of each ngnix server
 ```docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' dev.xify.in```

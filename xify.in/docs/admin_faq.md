@@ -178,7 +178,7 @@ curl https://xify.in/api/admin-api/admin/health
 
 ### User reports "Invalid OTP"
 - **Check Expiry**: Verify the OTP wasn't requested more than 10 minutes ago.
-- **Check Delivery**: See [Infrastructure Overview](infrastructure_overview.md#3-mailjet-webhook-monitoring) for instructions on tracking Mailjet delivery events.
+- **Check Delivery**: See [Infrastructure Overview](infrastructure_overview.md#email-delivery-system-smtp) for instructions on verifying SMTP delivery status.
 - **Database check**: 
   ```bash
   sqlite3 [REPO_ROOT]/backend_data/database.db "SELECT * FROM otp WHERE email='user@example.com' ORDER BY expiry DESC LIMIT 1;"

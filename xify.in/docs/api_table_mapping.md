@@ -29,7 +29,7 @@ Shared by `main.py` and `share_service.py`.
 | `otp` | `main.py` | POST | One-Time Passwords for authentication. |
 | `project` | `main.py` | GET/POST | Container for user projects (includes Grid settings in Pro). |
 | `projectdata` | `main.py` | GET/POST | Versioned JSON application state (Verge3D). |
-| `emaildeliverylog`| `main.py` | POST | Tracking Mailjet/SMTP delivery status. |
+| `emaildeliverylog`| `main.py` | POST | Tracking SMTP delivery status (e.g., 'accepted'). |
 | `share` | `share_service.py`| GET/POST | Mapping UUIDs to public project data. |
 
 ### 2. Community Forum Tables

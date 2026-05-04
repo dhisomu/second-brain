@@ -62,7 +62,7 @@ docker-compose up -d --build
 ## 3. Important Notes
 
 ### Webhooks & Monitoring
-- **Webhooks:** Mailjet webhooks are configured to hit `https://xify.in/webhooks/mailjet`. Therefore, the **Email Delivery Tracking** in the Admin Dashboard will only show results on the **Production** site.
+- **Email Delivery:** OTP and notification emails are sent via SMTP. Delivery logs (`accepted` events) are visible in the Admin Dashboard across all environments as they are logged directly to the local `database.db`.
 - **Admin Dashboard:** The dashboard exists in all environments but is most useful in Stage/Dev for checking active sessions and local logs.
 
 ### Database

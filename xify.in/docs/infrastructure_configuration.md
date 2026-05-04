@@ -19,8 +19,7 @@ The `default.conf` files use environment-specific suffixes for backend services 
 | **Webhooks backend** | `xify-backend` | **MISSING** | `xify-backend-dev` |
 | Admin API backend | `xify-admin-backend-prod` | `xify-admin-backend-stage` | `xify-admin-backend-dev` |
 
-> [!IMPORTANT]
-> **Staging Impact Analysis:** The absence of the `/webhooks/` block in Staging means Mailjet delivery events (delivered, opened, etc.) will **not be logged** in the staging environment.
+> **Staging Impact Analysis:** Since standard SMTP does not use webhooks for delivery status, the `/webhooks/` block is no longer a critical dependency for delivery logging. Logging now happens directly in the backend during the `send_email` function.
 
 ---
 
@@ -154,3 +153,69 @@ The Admin Console (`admin_sessions.html`) now includes a real-time **Global Infr
 - **Container Name:** (human-readable ID)
 - **Status:** (e.g., "Up 2 minutes")
 - **State:** (Running, Exited, Restarting)
+
+---
+
+## 8. Environment Configuration (.env)
+
+The Xify platform uses a `.env` file at the repository root to manage environment-specific variables. This file is excluded from version control for security.
+
+### 📋 Environment Variable Reference
+
+| Category | Variable | Example Value | Description |
+| :--- | :--- | :--- | :--- |
+| **Docker Compose** | `COMPOSE_NAME` | `xify-in` | The project name for Docker Compose orchestration. |
+| | `XIFY_ROOT` | `/srv/xify.in` | Absolute path to the repository on the host. |
+| | `XIFY_DOMAIN` | `xify.in` | The primary domain for routing. |
+| **Networking** | `TRAEFIK_NET` | `xify-in_default` | The shared Docker network for Traefik ingress. |
+| | `TRAEFIK_ROUTER` | `xify-in` | The Traefik router name for this stack. |
+| | `NGINX_PORT` | `8080` | The host port mapped to the Nginx service. |
+| **Container Names**| `NGINX_CONTAINER_NAME`| `xify.in` | The human-readable name for the Nginx container. |
+| | `BACKEND_CONTAINER_NAME`| `xify-backend` | Name for the primary FastAPI backend. |
+| | `VERGE3D_CONTAINER_NAME`| `xify-verge3d` | Name for the Verge3D application server. |
+| | `SHARE_SERVICE_CONTAINER_NAME`| `xify-share-service` | Name for the project sharing service. |
+| **SMTP (Standard)** | `SMTP_HOST` | `smtpout.secureserver.net` | GoDaddy SMTP server. |
+| | `SMTP_PORT` | `465` | SSL Port for mail delivery. |
+| | `SMTP_USER` | `info@xify.in` | Account used for sending OTPs. |
+| | `SMTP_PASS` | `'********'` | Password for the SMTP account. |
+| **SMTP (Admin)** | `ADMIN_SMTP_HOST` | `smtpout.secureserver.net` | Admin-specific SMTP host. |
+| | `ADMIN_SMTP_PORT` | `465` | Admin-specific SMTP port. |
+| | `ADMIN_SMTP_USER` | `info@xify.in` | Admin-specific SMTP user. |
+| | `ADMIN_SMTP_PASS` | `'********'` | Admin-specific SMTP password. |
+| | `ADMIN_SENDER_EMAIL`| `info@xify.in` | The address used in the "From" header for admin mail. |
+
+### 🛠️ Setting Up a New Environment
+To set up a new environment (e.g., a new developer machine), copy the following template into a `.env` file at the root:
+
+```env
+COMPOSE_NAME=xify-in
+XIFY_ROOT=/srv/xify.in
+XIFY_DOMAIN=xify.in
+TRAEFIK_NET=xify-in_default
+TRAEFIK_ROUTER=xify-in
+
+NGINX_CONTAINER_NAME=xify.in
+BACKEND_CONTAINER_NAME=xify-backend
+VERGE3D_CONTAINER_NAME=xify-verge3d
+SHARE_SERVICE_CONTAINER_NAME=xify-share-service
+
+NGINX_PORT=8080
+
+# --- Standard/User SMTP (GoDaddy) ---
+SMTP_HOST=smtpout.secureserver.net
+SMTP_PORT=465
+SMTP_USER=info@xify.in
+SMTP_PASS='your_password_here'
+
+# --- Admin SMTP (GoDaddy) ---
+ADMIN_SMTP_HOST=smtpout.secureserver.net
+ADMIN_SMTP_PORT=465
+ADMIN_SMTP_USER=info@xify.in
+ADMIN_SMTP_PASS='your_password_here'
+ADMIN_SENDER_EMAIL=info@xify.in
+```
+
+> [!CAUTION]
+> **Security Warning:** Never commit the `.env` file to version control. Always ensure it is listed in your `.gitignore` to prevent exposing SMTP credentials and internal path structures.
+
+
