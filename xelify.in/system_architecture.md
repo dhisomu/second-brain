@@ -52,8 +52,10 @@ graph TD
 | **Traefik** | `/opt/traefik` |
 | **Docker Proxy** | `/opt/docker-socket-proxy` |
 | **Watchtower** | `/opt/watchtower` |
-| **Web Root** | `/srv/xelify.in/www` |
+| **Web Root (Main)** | `/srv/xelify.in/www` |
+| **SMB App Root** | `/srv/xelify/smb` |
 | **Documentation** | `/srv/Docs` |
+| **Ideation/Planning**| `/srv/second-brain/xelify.in/SMB` |
 
 ### 🛠 Automated Maintenance
 All core services are configured with `restart: always` to ensure high availability after server reboots or service failures. Watchtower manages image updates silently in the background during off-peak hours (4:15 AM).
@@ -78,4 +80,28 @@ To ensure network isolation and prevent IP collisions, the following subnets are
 > When spinning up new stacks for `domorewithus.com`, please use the `172.30.x.x` series (specifically `.30` for Dev, `.20` for Stage, and `.10` for Prod) to maintain consistency and isolation.
 
 ---
-*Last updated: April 21, 2026*
+---
+*Last updated: May 4, 2026*
+
+## 🏢 App Ecosystem Governance (SMB Example)
+
+To maintain consistency across all Xelify applications, the following directory structure must be followed for new apps (e.g., **Logit**):
+
+```text
+/srv/xelify/smb/
+├── dev/        <-- smbdev.xelify.in
+├── stage/      <-- smbstage.xelify.in
+└── prod/       <-- smb.xelify.in (Production)
+    └── www/
+        └── Home/
+            └── Apps/
+                └── logit/          <-- The Paperless Log Book App
+                    ├── backend/    <-- FastAPI logic
+                    ├── frontend/   <-- Vanilla JS/CSS
+                    ├── db_data/    <-- Persistent Postgres Data
+                    ├── Dockerfile
+                    └── docker-compose.yaml
+```
+
+> [!TIP]
+> Always use a separate `db_data` folder within the app directory to ensure database portability and isolation between dev/stage/prod.
