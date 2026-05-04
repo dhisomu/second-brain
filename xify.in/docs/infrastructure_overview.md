@@ -219,7 +219,7 @@ Below is a mapping of how the frontend components interact with these backend se
 The behavior of the backend and the Docker orchestration is governed by a **`.env` file** at the repository root. This file contains critical secrets (SMTP passwords) and path configurations.
 
 > [!IMPORTANT]
-> For a full list of environment variables and a setup template, see the **[Infrastructure Configuration Guide](infrastructure_configuration.md#8-environment-configuration-env)**.
+> For a full list of environment variables, their purpose, and a setup template, see the dedicated **[Environment Configuration Guide (.env)](env_configuration_guide.md)**.
 
 ---
 
