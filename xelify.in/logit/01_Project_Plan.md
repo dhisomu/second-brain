@@ -4,6 +4,32 @@ This document outlines the development plan for Logit using a structured approac
 
 ---
 
+## 👥 User Personas & Journeys
+
+To ensure strict data isolation and organizational control, the platform recognizes four distinct personas.
+
+### 1. Super Admin (IT Team)
+- **Role**: Full system access.
+- **Journey**: Manages global settings, creates new Departments, assigns "Key Users," and monitors system-wide logs for compliance.
+- **Access**: Can see/edit EVERYTHING.
+
+### 2. Department Key User (Dept Admin)
+- **Role**: The "Process Owner" for a specific department (e.g., Quality, Production).
+- **Journey**: Designs forms, defines approval workflows, and manages User Groups *within their department*.
+- **Constraint**: **Isolation**. A Quality Key User cannot see or edit Production form templates.
+
+### 3. Field Operator (Creator)
+- **Role**: Data entry on the shop floor.
+- **Journey**: Scans a QR code or selects a form from their dashboard, fills in data, and submits for approval.
+
+### 4. Approver (Manager/Lead)
+- **Role**: Quality gatekeeper.
+- **Journey**: Receives notifications for pending logs, reviews the data, and either Approves or Rejects with comments.
+
+---
+
+---
+
 ## 🗓️ Development Execution Order (The Build Sequence)
 
 To ensure a functional system as quickly as possible, development will follow this prioritized sequence:
@@ -170,6 +196,7 @@ This table stores the master configuration of every form created in the system.
 |:---|:---|:---|
 | `form_id` | `UUID` | **Auto-generated** unique identifier (with built-in deduplication). |
 | `name` | `String` | **Unique** human-readable name (e.g., "Daily Shift Log"). |
+| `department_id` | `String` | **Isolation Key**: Links form to a specific department (e.g., "DEPT-QA"). |
 | `slug` | `String` | **Unique** URL-friendly ID (e.g., "daily-shift-log"). |
 | `version` | `Integer` | Auto-increments when the schema is updated. |
 | **`schema`** | **`JSONB`** | **The Core**: Stores fields, types, validation, and grid layout. |
