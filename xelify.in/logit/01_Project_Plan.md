@@ -159,23 +159,36 @@ This table stores the entries pushed by operators in the field.
 |:---|:---|:---|
 | `log_id` | `UUID` | **Auto-generated** unique identifier for the log entry. |
 | `form_id` | `UUID` | Reference to the `FormDefinitions` entry. |
-| `version` | `Integer` | Snapshot of the form version used for this entry. |
+| `version` | `Integer` | **Snapshot** of the `version` from `FormDefinitions` used at submission time. |
 | **`data`** | **`JSONB`** | **The Payload**: Key-value pairs of operator input. |
 | `status` | `String` | Workflow status (Draft, Submitted, Approved). |
 | `submitted_at`| `DateTime` | Timestamp of submission. |
 | `submitted_by`| `String` | User who entered the data. |
 | `metadata` | `JSONB` | Stores GPS, IP address, and browser/OS info. |
 
-### 3. `AuditLogs` (The History)
-A read-only table for immutable tracking.
+### 4. Implementation Example (Concrete Data)
 
-| Column | Type | Description |
-|:---|:---|:---|
-| `id` | `BigInt` | Sequence ID. |
-| `target_id` | `UUID` | Reference to the `LogSubmissions` entry being changed. |
-| `old_value` | `JSONB` | Snapshot of data before the change. |
-| `new_value` | `JSONB` | Snapshot of data after the change. |
-| `action` | `String` | e.g., "STATUS_UPDATE", "VALUE_EDIT". |
+To visualize how these tables work together, here is a "Simple Feedback" form example.
+
+#### **Table: `FormDefinitions` (The Blueprint)**
+| form_id | name | version | schema (JSONB) |
+|:---|:---|:---|:---|
+| `uuid-1` | Simple Feedback | 1 | `{"fields": [{"type": "ui", "subType": "label", "text": "Feedback Form"}, {"id": "user_name", "type": "input", "subType": "text", "label": "Your Name"}, {"id": "submit_btn", "type": "action", "subType": "button", "label": "Submit"}]}` |
+
+#### **Table: `LogSubmissions` (The Data)**
+Two different operators submit data using the blueprint above.
+
+| log_id | form_id | version | data (JSONB) | submitted_by |
+|:---|:---|:---|:---|:---|
+| `log-101` | `uuid-1` | 1 | `{"user_name": "Alice Walker"}` | operator_alice@xelify.in |
+| `log-102` | `uuid-1` | 1 | `{"user_name": "Bob Smith"}` | operator_bob@xelify.in |
+
+#### **Table: `AuditLogs` (The History)**
+If a manager corrects Bob's name later.
+
+| id | target_id (log_id) | old_value (JSONB) | new_value (JSONB) | action |
+|:---|:---|:---|:---|:---|
+| 1 | `log-102` | `{"user_name": "Bob Smith"}` | `{"user_name": "Robert Smith"}` | VALUE_EDIT |
 
 ---
 *Last Updated: May 6, 2026*
