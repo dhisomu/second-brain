@@ -157,7 +157,7 @@ This table stores the entries pushed by operators in the field.
 
 | Column | Type | Description |
 |:---|:---|:---|
-| `id` | `UUID` | Unique identifier for the log entry. |
+| `id` | `UUID` | **Auto-generated** unique identifier for the log entry. |
 | `form_id` | `UUID` | Reference to the `FormDefinitions` entry. |
 | `version` | `Integer` | Snapshot of the form version used for this entry. |
 | **`data`** | **`JSONB`** | **The Payload**: Key-value pairs of operator input. |
