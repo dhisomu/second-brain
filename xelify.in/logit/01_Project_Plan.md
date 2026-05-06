@@ -8,29 +8,29 @@ This document outlines the development plan for Logit using a structured approac
 
 To ensure a functional system as quickly as possible, development will follow this prioritized sequence:
 
-### Phase 1: The Foundation (Backend & Database) - **Priority: HIGH**
+### <a id="phase-1"></a>Phase 1: The Foundation (Backend & Database) - **Priority: HIGH**
 *Build the "Brains" first so data can be saved and retrieved.*
-1.  **DB Schema Setup**: Create `FormDefinitions` and `LogSubmissions` tables with JSONB support. ([Refer Tech Details](#-technical-deep-dive-database-schema-details))
+1.  **DB Schema Setup**: Create `FormDefinitions` and `LogSubmissions` tables with JSONB support. ([Refer Tech Details](#tech-details))
 2.  **Schema APIs**: Develop endpoints to save (POST) and fetch (GET) form metadata.
 3.  **Submission APIs**: Develop endpoints to receive and validate log data from operators.
 
-### Phase 2: The Dynamic Renderer (Field UI) - **Priority: HIGH**
+### <a id="phase-2"></a>Phase 2: The Dynamic Renderer (Field UI) - **Priority: HIGH**
 *Make it possible to display forms from the database.*
 1.  **Field Library**: Create the JS logic to render each input type (Text, Number, Phone, etc.).
 2.  **Dynamic Container**: Build the "Engine" that reads a JSON schema and renders the full form UI.
-3.  **Client-side Validation**: Implement the regex and min/max logic in the browser. ([Refer Epic 3](#-epic-3-dynamic-form-rendering--logic-field-ui))
+3.  **Client-side Validation**: Implement the regex and min/max logic in the browser. ([Refer Epic 3](#epic-3))
 
-### Phase 3: The Visual Builder (Admin Canvas) - **Priority: MEDIUM**
+### <a id="phase-3"></a>Phase 3: The Visual Builder (Admin Canvas) - **Priority: MEDIUM**
 *Build the user-friendly interface to create the forms.*
 1.  **Grid Canvas**: Implement the snap-to-grid visual area.
 2.  **Component Palette**: Enable dragging elements onto the canvas.
-3.  **Property Inspector**: The sidebar for configuring field rules (Validation, Place/Plant filters). ([Refer Epic 2](#-epic-2-form-builder--visual-canvas-admin-ui))
+3.  **Property Inspector**: The sidebar for configuring field rules (Validation, Place/Plant filters). ([Refer Epic 2](#epic-2))
 
-### Phase 4: Workflow & Governance (Management) - **Priority: LOW**
+### <a id="phase-4"></a>Phase 4: Workflow & Governance (Management) - **Priority: LOW**
 *Finalize the industrial-grade features.*
 1.  **Role-Based Access**: Implement Admin/Operator/Manager permissions.
 2.  **Audit Trail Engine**: Immutable logging of all changes.
-3.  **Reporting Dashboard**: Tabular view and Excel/PDF export of submitted logs. ([Refer Epic 4](#-epic-4-workflow--audit-management))
+3.  **Reporting Dashboard**: Tabular view and Excel/PDF export of submitted logs. ([Refer Epic 4](#epic-4))
 
 ---
 
@@ -63,8 +63,8 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## 🎨 EPIC 2: Form Builder & Visual Canvas (Admin UI)
-[← Back to Phase 3](#phase-3-the-visual-builder-admin-canvas---priority-medium)
+## <a id="epic-2"></a>🎨 EPIC 2: Form Builder & Visual Canvas (Admin UI)
+[← Back to Phase 3](#phase-3)
 **Goal**: Provide a "Power Apps" style drag-and-drop experience for creating complex forms.
 
 ### Feature 2.1: Visual Grid Canvas (Snap-to-Grid)
@@ -87,8 +87,8 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## 🚀 EPIC 3: Dynamic Form Rendering & Logic (Field UI)
-[← Back to Phase 2](#phase-2-the-dynamic-renderer-field-ui---priority-high)
+## <a id="epic-3"></a>🚀 EPIC 3: Dynamic Form Rendering & Logic (Field UI)
+[← Back to Phase 2](#phase-2)
 **Goal**: Render high-performance, responsive forms on any device with complex real-time logic.
 
 ### Feature 3.1: Cascading Filter Engine (Place → Plant)
@@ -104,8 +104,8 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## 🛡️ EPIC 4: Workflow & Audit (Management)
-[← Back to Phase 4](#phase-4-workflow--governance-management---priority-low)
+## <a id="epic-4"></a>🛡️ EPIC 4: Workflow & Audit (Management)
+[← Back to Phase 4](#phase-4)
 **Goal**: Ensure full traceability and approval cycles for every log entry.
 
 ### Feature 4.1: Immutable Audit Trail
@@ -133,8 +133,8 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## 💾 Technical Deep Dive: Database Schema Details
-[← Back to Phase 1](#phase-1-the-foundation-backend--database---priority-high)
+## <a id="tech-details"></a>💾 Technical Deep Dive: Database Schema Details
+[← Back to Phase 1](#phase-1)
 
 To implement Phase 1, the following PostgreSQL structures will be established using **SQLModel** (FastAPI-ready ORM).
 
