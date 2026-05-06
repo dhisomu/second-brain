@@ -207,6 +207,7 @@ A read-only table for immutable tracking of all lifecycle events.
 | `new_value` | `JSONB` | Snapshot of data/status **after** the action. |
 | `action` | `String` | Lifecycle event: `SUBMIT`, `APPROVE_1`, `APPROVE_2`, `REJECT`, `EDIT_RESUBMIT`. |
 | `performed_by`| `String` | User who took the action. |
+| `comments` | `String` | Optional notes (e.g., "Reason for rejection"). |
 | `timestamp` | `DateTime` | When the event occurred. |
 
 ### 4. Implementation Example (Concrete Data Case Study)
@@ -219,7 +220,7 @@ This example tracks the journey of two different forms through their lifecycle.
 **Table: `FormDefinitions`**
 | form_id | name | version | workflow_config | created_at |
 |:---|:---|:---|:---|:---|
-| `f-100` | Shift Handover | 1 | `{"stages": 1}` | `2026-05-06T08:00:00Z` |
+| `f-100` | Shift Handover | 1 | `{"stages": 1, "can_create": ["g-ops"], "can_edit": ["g-ops"]}` | `2026-05-06T08:00:00Z` |
 
 **Table: `LogSubmissions`**
 | log_id | form_id | version | data (JSONB) | status | submitted_at | approved_by_1 |
@@ -243,14 +244,15 @@ This example tracks the journey of two different forms through their lifecycle.
 
 ---
 
-#### **Table: `AuditLogs` (The Traceability Trail)**
-Tracking the 2nd stage approval of the Quality Audit above.
+#### **Table: `AuditLogs` (Rejection & Resubmission Scenario)**
+*Example: A manager rejects a log for missing data, and the operator resubmits it.*
 
-| id | target_id | action | old_value | new_value | performed_by | timestamp |
-|:---|:---|:---|:---|:---|:---|:---|
-| 55 | `L-002` | `SUBMIT` | `{}` | `{"status": "Submitted"}` | `op_john@xelify.in` | `10:00:00Z` |
-| 56 | `L-002` | `APPROVE_1` | `{"status": "Submitted"}` | `{"status": "Approved_1"}` | `lead_qa@xelify.in` | `11:00:00Z` |
-| 57 | `L-002` | `APPROVE_2` | `{"status": "Approved_1"}` | `{"status": "Approved"}` | `factory_mgr@xelify.in` | `14:00:00Z` |
+| id | target_id | action | old_value | new_value | comments | performed_by | timestamp |
+|:---|:---|:---|:---|:---|:---|:---|:---|
+| 10 | `L-003` | `SUBMIT` | `{}` | `{"status": "Submitted"}` | "Initial log" | `op_alice@xelify.in` | `10:00:00Z` |
+| 11 | `L-003` | `REJECT` | `{"status": "Submitted"}` | `{"status": "Rejected"}` | "Missing data" | `mgr_bob@xelify.in` | `10:30:00Z` |
+| 12 | `L-003` | `EDIT_RESUBMIT` | `{"temp": null}` | `{"temp": 36.5, "status": "Submitted"}` | "Added data" | `op_alice@xelify.in` | `11:00:00Z` |
+| 13 | `L-003` | `APPROVE_1` | `{"status": "Submitted"}` | `{"status": "Approved"}` | "Verified" | `mgr_bob@xelify.in` | `11:15:00Z` |
 
 #### **Table: `UserGroups`**
 | group_id | group_name | members (JSONB) | permissions (JSONB) |
