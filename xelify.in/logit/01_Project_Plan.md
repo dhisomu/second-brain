@@ -143,9 +143,9 @@ This table stores the master configuration of every form created in the system.
 
 | Column | Type | Description |
 |:---|:---|:---|
-| `id` | `UUID` | Unique identifier for the form. |
-| `name` | `String` | Human-readable name (e.g., "Daily Shift Log"). |
-| `slug` | `String` | URL-friendly ID (e.g., "daily-shift-log"). |
+| `id` | `UUID` | **Auto-generated** unique identifier (with built-in deduplication). |
+| `name` | `String` | **Unique** human-readable name (e.g., "Daily Shift Log"). |
+| `slug` | `String` | **Unique** URL-friendly ID (e.g., "daily-shift-log"). |
 | `version` | `Integer` | Auto-increments when the schema is updated. |
 | **`schema`** | **`JSONB`** | **The Core**: Stores fields, types, validation, and grid layout. |
 | `is_active` | `Boolean` | Controls whether operators can see the form. |
