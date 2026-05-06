@@ -209,35 +209,54 @@ A read-only table for immutable tracking of all lifecycle events.
 | `performed_by`| `String` | User who took the action. |
 | `timestamp` | `DateTime` | When the event occurred. |
 
-### 4. Implementation Example (Concrete Data)
+### 4. Implementation Example (Concrete Data Case Study)
 
-To visualize how these tables work together, here is a "Simple Feedback" form example.
+This example tracks the journey of two different forms through their lifecycle.
 
-#### **Table: `FormDefinitions` (The Blueprint)**
-| form_id | name | version | schema (JSONB) |
-|:---|:---|:---|:---|
-| `uuid-1` | Simple Feedback | 1 | `{"fields": [{"type": "ui", "subType": "label", "text": "Feedback Form"}, {"id": "user_name", "type": "input", "subType": "text", "label": "Your Name"}, {"id": "submit_btn", "type": "action", "subType": "button", "label": "Submit"}]}` |
+#### **Scenario A: 1-Stage Approval (Shift Handover)**
+*Created: 08:00 AM | Submitted: 04:00 PM | Approved: 04:30 PM*
 
-#### **Table: `LogSubmissions` (The Data)**
-Two different operators submit data using the blueprint above.
-
-| log_id | form_id | version | data (JSONB) | submitted_by |
+**Table: `FormDefinitions`**
+| form_id | name | version | workflow_config | created_at |
 |:---|:---|:---|:---|:---|
-| `log-101` | `uuid-1` | 1 | `{"user_name": "Alice Walker"}` | operator_alice@xelify.in |
-| `log-102` | `uuid-1` | 1 | `{"user_name": "Bob Smith"}` | operator_bob@xelify.in |
+| `f-100` | Shift Handover | 1 | `{"stages": 1}` | `2026-05-06T08:00:00Z` |
 
-#### **Table: `AuditLogs` (The History)**
-If a manager corrects Bob's name later.
+**Table: `LogSubmissions`**
+| log_id | form_id | version | data (JSONB) | status | submitted_at | approved_by_1 |
+|:---|:---|:---|:---|:---|:---|:---|
+| `L-001` | `f-100` | 1 | `{"shift": "Morning"}` | `Approved` | `2026-05-06T16:00:00Z` | `mgr_smith@xelify.in` |
 
-| id | target_id (log_id) | old_value (JSONB) | new_value (JSONB) | action |
+---
+
+#### **Scenario B: 2-Stage Approval (Quality Audit)**
+*Created: 09:00 AM | Submitted: 10:00 AM | Stage 1 Approved: 11:00 AM | Stage 2 Approved: 02:00 PM*
+
+**Table: `FormDefinitions`**
+| form_id | name | version | workflow_config | created_at |
 |:---|:---|:---|:---|:---|
-| 1 | `log-102` | `{"user_name": "Bob Smith"}` | `{"user_name": "Robert Smith"}` | EDIT_RESUBMIT |
-| 2 | `log-102` | `{"status": "Submitted"}` | `{"status": "Approved_1"}` | APPROVE_1 |
+| `f-200` | Quality Audit | 1 | `{"stages": 2}` | `2026-05-06T09:00:00Z` |
 
-#### **Table: `UserGroups` (New)**
+**Table: `LogSubmissions`**
+| log_id | form_id | status | approved_by_1 | approved_by_2 | approval_1_at | approval_2_at |
+|:---|:---|:---|:---|:---|:---|:---|
+| `L-002` | `f-200` | `Approved` | `lead_qa@xelify.in` | `factory_mgr@xelify.in` | `11:00:00Z` | `14:00:00Z` |
+
+---
+
+#### **Table: `AuditLogs` (The Traceability Trail)**
+Tracking the 2nd stage approval of the Quality Audit above.
+
+| id | target_id | action | old_value | new_value | performed_by | timestamp |
+|:---|:---|:---|:---|:---|:---|:---|
+| 55 | `L-002` | `SUBMIT` | `{}` | `{"status": "Submitted"}` | `op_john@xelify.in` | `10:00:00Z` |
+| 56 | `L-002` | `APPROVE_1` | `{"status": "Submitted"}` | `{"status": "Approved_1"}` | `lead_qa@xelify.in` | `11:00:00Z` |
+| 57 | `L-002` | `APPROVE_2` | `{"status": "Approved_1"}` | `{"status": "Approved"}` | `factory_mgr@xelify.in` | `14:00:00Z` |
+
+#### **Table: `UserGroups`**
 | group_id | group_name | members (JSONB) | permissions (JSONB) |
 |:---|:---|:---|:---|
-| `grp-1` | Quality Managers | `["user-1", "user-2"]` | `{"can_approve": true, "stage": 1}` |
+| `g-qa` | QA Leads | `["lead_qa@xelify.in"]` | `{"can_approve": true, "stage": 1}` |
+| `g-mgr` | Factory Mgmt | `["factory_mgr@xelify.in"]` | `{"can_approve": true, "stage": 2}` |
 
 ---
 *Last Updated: May 6, 2026*
