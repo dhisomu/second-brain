@@ -143,7 +143,7 @@ This table stores the master configuration of every form created in the system.
 
 | Column | Type | Description |
 |:---|:---|:---|
-| `id` | `UUID` | **Auto-generated** unique identifier (with built-in deduplication). |
+| `form_id` | `UUID` | **Auto-generated** unique identifier (with built-in deduplication). |
 | `name` | `String` | **Unique** human-readable name (e.g., "Daily Shift Log"). |
 | `slug` | `String` | **Unique** URL-friendly ID (e.g., "daily-shift-log"). |
 | `version` | `Integer` | Auto-increments when the schema is updated. |
@@ -157,7 +157,7 @@ This table stores the entries pushed by operators in the field.
 
 | Column | Type | Description |
 |:---|:---|:---|
-| `id` | `UUID` | **Auto-generated** unique identifier for the log entry. |
+| `log_id` | `UUID` | **Auto-generated** unique identifier for the log entry. |
 | `form_id` | `UUID` | Reference to the `FormDefinitions` entry. |
 | `version` | `Integer` | Snapshot of the form version used for this entry. |
 | **`data`** | **`JSONB`** | **The Payload**: Key-value pairs of operator input. |
