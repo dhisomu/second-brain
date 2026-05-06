@@ -9,9 +9,9 @@ This document outlines the development plan for Logit using a structured approac
 To ensure strict data isolation and organizational control, the platform recognizes four distinct personas.
 
 ### 1. Super Admin (IT Team)
-- **Role**: Full system access.
-- **Journey**: Manages global settings, creates new Departments, assigns "Key Users," and monitors system-wide logs for compliance.
-- **Access**: Can see/edit EVERYTHING.
+- **Role**: System Governance.
+- **Journey**: Creates Departments, assigns **Department Key Users**, and initializes "Form Groups" for each department.
+- **Access**: Global visibility for technical support and compliance.
 
 ### 2. Department Key User (Dept Admin)
 - **Role**: The "Process Owner" for a specific department (e.g., Quality, Production).
@@ -197,6 +197,7 @@ This table stores the master configuration of every form created in the system.
 | `form_id` | `UUID` | **Auto-generated** unique identifier (with built-in deduplication). |
 | `name` | `String` | **Unique** human-readable name (e.g., "Daily Shift Log"). |
 | `department_id` | `String` | **Isolation Key**: Links form to a specific department (e.g., "DEPT-QA"). |
+| `category_id` | `String` | **Internal Grouping**: e.g., "Maintenance", "Safety" within a department. |
 | `slug` | `String` | **Unique** URL-friendly ID (e.g., "daily-shift-log"). |
 | `version` | `Integer` | Auto-increments when the schema is updated. |
 | **`schema`** | **`JSONB`** | **The Core**: Stores fields, types, validation, and grid layout. |
