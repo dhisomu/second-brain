@@ -4,7 +4,7 @@ This document outlines the development plan for Logit using a structured approac
 
 ---
 
-## 👥 User Personas & Journeys
+## User Personas & Journeys
 
 To ensure strict data isolation and organizational control, the platform recognizes four distinct personas.
 
@@ -28,42 +28,38 @@ To ensure strict data isolation and organizational control, the platform recogni
 
 ---
 
----
-
-## 🗓️ Development Execution Order (The Build Sequence)
+## Development Execution Order (The Build Sequence)
 
 To ensure a functional system as quickly as possible, development will follow this prioritized sequence:
 
-### <a id="phase-1"></a>Phase 1: The Foundation (Backend & Database) - **Priority: HIGH**
+### Phase 1: The Foundation (Backend & Database) - Priority: HIGH
 *Build the "Brains" first so data can be saved and retrieved.*
-1.  **DB Schema Setup**: Create `FormDefinitions` and `LogSubmissions` tables with JSONB support. ([Refer Tech Details](#tech-details))
+1.  **DB Schema Setup**: Create `FormDefinitions` and `LogSubmissions` tables with JSONB support. ([Refer Tech Details](#technical-deep-dive-database-schema-details))
 2.  **Schema APIs**: Develop endpoints to save (POST) and fetch (GET) form metadata.
 3.  **Submission APIs**: Develop endpoints to receive and validate log data from operators.
-4.  **RBAC & User Groups**: Implement the database and UI for managing user roles, groups, and approval permissions. ([Refer Epic 5](#epic-5))
+4.  **RBAC & User Groups**: Implement the database and UI for managing user roles, groups, and approval permissions. ([Refer Epic 5](#epic-5-rbac--user-group-management-phase-1))
 
-### <a id="phase-2"></a>Phase 2: The Dynamic Renderer (Field UI) - **Priority: HIGH**
+### Phase 2: The Dynamic Renderer (Field UI) - Priority: HIGH
 *Make it possible to display forms from the database.*
 1.  **Field Library**: Create the JS logic to render each input type (Text, Number, Phone, etc.).
 2.  **Dynamic Container**: Build the "Engine" that reads a JSON schema and renders the full form UI.
-3.  **Client-side Validation**: Implement the regex and min/max logic in the browser. ([Refer Epic 3](#epic-3))
+3.  **Client-side Validation**: Implement the regex and min/max logic in the browser. ([Refer Epic 3](#epic-3-dynamic-form-rendering--logic-field-ui))
 
-### <a id="phase-3"></a>Phase 3: The Visual Builder (Admin Canvas) - **Priority: MEDIUM**
+### Phase 3: The Visual Builder (Admin Canvas) - Priority: MEDIUM
 *Build the user-friendly interface to create the forms.*
 1.  **Grid Canvas**: Implement the snap-to-grid visual area.
 2.  **Component Palette**: Enable dragging elements onto the canvas.
-3.  **Property Inspector**: The sidebar for configuring field rules (Validation, Place/Plant filters). ([Refer Epic 2](#epic-2))
+3.  **Property Inspector**: The sidebar for configuring field rules (Validation, Place/Plant filters). ([Refer Epic 2](#epic-2-form-builder--visual-canvas-admin-ui))
 
-### <a id="phase-4"></a>Phase 4: Workflow & Governance (Management) - **Priority: LOW**
+### Phase 4: Workflow & Governance (Management) - Priority: LOW
 *Finalize the industrial-grade features.*
 1.  **Role-Based Access**: Implement Admin/Operator/Manager permissions.
 2.  **Audit Trail Engine**: Immutable logging of all changes.
-3.  **Reporting Dashboard**: Tabular view and Excel/PDF export of submitted logs. ([Refer Epic 4](#epic-4))
+3.  **Reporting Dashboard**: Tabular view and Excel/PDF export of submitted logs. ([Refer Epic 4](#epic-4-workflow--audit-management))
 
 ---
 
----
-
-## 🏗 EPIC 1: Core Engine & Data Persistence (Backend & DB)
+## EPIC 1: Core Engine & Data Persistence (Backend & DB)
 **Goal**: Establish a robust, high-performance foundation to store dynamic form definitions and industrial log data.
 
 ### Feature 1.1: Dynamic Form Schema Management
@@ -90,8 +86,8 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## <a id="epic-2"></a>🎨 EPIC 2: Form Builder & Visual Canvas (Admin UI)
-[← Back to Phase 3](#phase-3)
+## EPIC 2: Form Builder & Visual Canvas (Admin UI)
+[← Back to Phase 3](#phase-3-the-visual-builder-admin-canvas---priority-medium)
 **Goal**: Provide a "Power Apps" style drag-and-drop experience for creating complex forms.
 
 ### Feature 2.1: Visual Grid Canvas (Snap-to-Grid)
@@ -114,8 +110,8 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## <a id="epic-3"></a>🚀 EPIC 3: Dynamic Form Rendering & Logic (Field UI)
-[← Back to Phase 2](#phase-2)
+## EPIC 3: Dynamic Form Rendering & Logic (Field UI)
+[← Back to Phase 2](#phase-2-the-dynamic-renderer-field-ui---priority-high)
 **Goal**: Render high-performance, responsive forms on any device with complex real-time logic.
 
 ### Feature 3.1: Cascading Filter Engine (Place → Plant)
@@ -131,8 +127,8 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## <a id="epic-4"></a>🛡️ EPIC 4: Workflow & Audit (Management)
-[← Back to Phase 4](#phase-4)
+## EPIC 4: Workflow & Audit (Management)
+[← Back to Phase 4](#phase-4-workflow--governance-management---priority-low)
 **Goal**: Ensure full traceability and approval cycles for every log entry.
 
 ### Feature 4.1: Comprehensive Lifecycle Audit Trail
@@ -144,7 +140,7 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## 🖥️ Screen Components Inventory
+## Screen Components Inventory
 
 ### 1. Form Builder (Admin)
 - `CanvasGrid`: The main drop zone with 12/24 column support.
@@ -160,8 +156,8 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## <a id="epic-5"></a>👥 EPIC 5: RBAC & User Group Management (Phase 1)
-[← Back to Phase 1](#phase-1)
+## EPIC 5: RBAC & User Group Management (Phase 1)
+[← Back to Phase 1](#phase-1-the-foundation-backend--database---priority-high)
 **Goal**: Establish a secure permission system to control who can create, edit, and approve logs.
 
 ### Feature 5.1: Multi-Stage Approval Configuration
@@ -184,12 +180,12 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## 💾 Technical Deep Dive: Database Schema Details
-[← Back to Phase 1](#phase-1)
+## Technical Deep Dive: Database Schema Details
+[← Back to Phase 1](#phase-1-the-foundation-backend--database---priority-high)
 
 To implement Phase 1, the following PostgreSQL structures will be established using **SQLModel** (FastAPI-ready ORM).
 
-### 1. `FormDefinitions` (The Blueprint)
+### 1. FormDefinitions (The Blueprint)
 This table stores the master configuration of every form created in the system.
 
 | Column | Type | Description |
@@ -206,7 +202,7 @@ This table stores the master configuration of every form created in the system.
 | `created_at` | `DateTime` | Timestamp of creation. |
 | `created_by` | `String` | User email/ID who created the form. |
 
-### 2. `LogSubmissions` (The Data)
+### 2. LogSubmissions (The Data)
 This table stores the entries pushed by operators in the field.
 
 | Column | Type | Description |
@@ -224,7 +220,7 @@ This table stores the entries pushed by operators in the field.
 | `submitted_by`| `String` | User who entered the data. |
 | `metadata` | `JSONB` | Stores GPS, IP address, and browser/OS info. |
 
-### 3. `AuditLogs` (The History)
+### 3. AuditLogs (The History)
 A read-only table for immutable tracking of all lifecycle events.
 
 | Column | Type | Description |
@@ -245,12 +241,12 @@ This example tracks the journey of two different forms through their lifecycle.
 #### **Scenario A: 1-Stage Approval (Shift Handover)**
 *Created: 08:00 AM | Submitted: 04:00 PM | Approved: 04:30 PM*
 
-**Table: `FormDefinitions`**
+**Table: FormDefinitions**
 | form_id | name | version | workflow_config | created_at |
 |:---|:---|:---|:---|:---|
 | `f-100` | Shift Handover | 1 | `{"stages": 1, "can_create": ["g-ops"], "can_edit": ["g-ops"], "approvers_s1": ["g-ops-mgr"]}` | `2026-05-06T08:00:00Z` |
 
-**Table: `LogSubmissions`**
+**Table: LogSubmissions**
 | log_id | form_id | version | data (JSONB) | status | submitted_at | approved_by_1 |
 |:---|:---|:---|:---|:---|:---|:---|
 | `L-001` | `f-100` | 1 | `{"shift": "Morning"}` | `Approved` | `2026-05-06T16:00:00Z` | `mgr_smith@xelify.in` |
@@ -260,19 +256,19 @@ This example tracks the journey of two different forms through their lifecycle.
 #### **Scenario B: 2-Stage Approval (Quality Audit)**
 *Created: 09:00 AM | Submitted: 10:00 AM | Stage 1 Approved: 11:00 AM | Stage 2 Approved: 02:00 PM*
 
-**Table: `FormDefinitions`**
+**Table: FormDefinitions**
 | form_id | name | version | workflow_config | created_at |
 |:---|:---|:---|:---|:---|
 | `f-200` | Quality Audit | 1 | `{"stages": 2, "can_create": ["g-ops"], "can_edit": ["g-ops"], "approvers_s1": ["g-qa"], "approvers_s2": ["g-factory-mgr"]}` | `2026-05-06T09:00:00Z` |
 
-**Table: `LogSubmissions`**
+**Table: LogSubmissions**
 | log_id | form_id | status | approved_by_1 | approved_by_2 | approval_1_at | approval_2_at |
 |:---|:---|:---|:---|:---|:---|:---|
 | `L-002` | `f-200` | `Approved` | `lead_qa@xelify.in` | `factory_mgr@xelify.in` | `11:00:00Z` | `14:00:00Z` |
 
 ---
 
-#### **Table: `AuditLogs` (Rejection & Resubmission Scenario)**
+#### **Table: AuditLogs (Rejection & Resubmission Scenario)**
 *Example: A manager rejects a log for missing data, and the operator resubmits it.*
 
 | id | target_id | action | old_value | new_value | comments | performed_by | timestamp |
@@ -282,7 +278,7 @@ This example tracks the journey of two different forms through their lifecycle.
 | 12 | `L-003` | `EDIT_RESUBMIT` | `{"temp": null}` | `{"temp": 36.5, "status": "Submitted"}` | "Added data" | `op_alice@xelify.in` | `11:00:00Z` |
 | 13 | `L-003` | `APPROVE_1` | `{"status": "Submitted"}` | `{"status": "Approved"}` | "Verified" | `mgr_bob@xelify.in` | `11:15:00Z` |
 
-#### **Table: `UserGroups`**
+#### **Table: UserGroups**
 | group_id | group_name | members (JSONB) | permissions (JSONB) |
 |:---|:---|:---|:---|
 | `g-qa` | QA Leads | `["lead_qa@xelify.in"]` | `{"can_approve": true, "stage": 1}` |
