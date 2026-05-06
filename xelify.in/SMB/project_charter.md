@@ -12,6 +12,8 @@ The **SMB Paperless Log Book** is a digital solution designed to replace manual,
 ## 3. Scope
 ### In-Scope
 - **Form Configurator**: UI to add fields (text, number, date, dropdown, signature).
+- **Advanced Component Registry**: Rich schema support for validation, events (debounce), and data binding.
+- **Visual Canvas Builder**: Grid-based "snap-to-grid" interface for field positioning (Low-code experience).
 - **Form Publishing**: Generate a unique URL/access point for each logbook.
 - **Data Entry Interface**: Dynamic rendering of the configured form for end-users.
 - **Data Management**: View, filter, and potentially export logged entries.
