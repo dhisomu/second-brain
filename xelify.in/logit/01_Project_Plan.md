@@ -13,6 +13,7 @@ To ensure a functional system as quickly as possible, development will follow th
 1.  **DB Schema Setup**: Create `FormDefinitions` and `LogSubmissions` tables with JSONB support. ([Refer Tech Details](#tech-details))
 2.  **Schema APIs**: Develop endpoints to save (POST) and fetch (GET) form metadata.
 3.  **Submission APIs**: Develop endpoints to receive and validate log data from operators.
+4.  **RBAC & User Groups**: Implement the database and UI for managing user roles, groups, and approval permissions. ([Refer Epic 5](#epic-5))
 
 ### <a id="phase-2"></a>Phase 2: The Dynamic Renderer (Field UI) - **Priority: HIGH**
 *Make it possible to display forms from the database.*
@@ -133,7 +134,31 @@ To ensure a functional system as quickly as possible, development will follow th
 
 ---
 
-## <a id="tech-details"></a>💾 Technical Deep Dive: Database Schema Details
+## <a id="epic-5"></a>👥 EPIC 5: RBAC & User Group Management (Phase 1)
+[← Back to Phase 1](#phase-1)
+**Goal**: Establish a secure permission system to control who can create, edit, and approve logs.
+
+### Feature 5.1: Multi-Stage Approval Configuration
+*   **User Story**: As an Admin, I want to define if a form requires 1 or 2 stages of approval so that I can enforce quality standards for critical logs.
+*   **Acceptance Criteria**:
+    *   **Given**: The Form Builder metadata section.
+    *   **When**: I set `approvals_required` to `2` and assign `UserGroup: QualityManager`.
+    *   **Then**: The form schema saves these workflow rules in the `workflow_config` JSONB column.
+*   **Test Case (AAA)**:
+    *   **Arrange**: Define a form with a 2-stage approval workflow.
+    *   **Act**: Save the form definition.
+    *   **Assert**: Verify `workflow_config->'approvals_required'` equals `2`.
+
+### Feature 5.2: User Group & Role Assignment UI
+*   **User Story**: As an Admin, I want to group users and assign roles (Creator, Editor, Approver) so that I can manage permissions at scale.
+*   **Acceptance Criteria**:
+    *   **Given**: The Admin Dashboard.
+    *   **When**: I create a group "Production Team" and add 5 users with the "Operator" role.
+    *   **Then**: The system stores this mapping in the `UserGroups` table.
+
+---
+
+## 💾 Technical Deep Dive: Database Schema Details
 [← Back to Phase 1](#phase-1)
 
 To implement Phase 1, the following PostgreSQL structures will be established using **SQLModel** (FastAPI-ready ORM).
@@ -148,6 +173,7 @@ This table stores the master configuration of every form created in the system.
 | `slug` | `String` | **Unique** URL-friendly ID (e.g., "daily-shift-log"). |
 | `version` | `Integer` | Auto-increments when the schema is updated. |
 | **`schema`** | **`JSONB`** | **The Core**: Stores fields, types, validation, and grid layout. |
+| `workflow_config` | `JSONB` | Stores approval rules (e.g., `{"stages": 2, "approvers": ["group_id"]}`). |
 | `is_active` | `Boolean` | Controls whether operators can see the form. |
 | `created_at` | `DateTime` | Timestamp of creation. |
 | `created_by` | `String` | User email/ID who created the form. |
@@ -161,7 +187,11 @@ This table stores the entries pushed by operators in the field.
 | `form_id` | `UUID` | Reference to the `FormDefinitions` entry. |
 | `version` | `Integer` | **Snapshot** of the `version` from `FormDefinitions` used at submission time. |
 | **`data`** | **`JSONB`** | **The Payload**: Key-value pairs of operator input. |
-| `status` | `String` | Workflow status (Draft, Submitted, Approved). |
+| `status` | `String` | Workflow status (Draft, Submitted, Approved, Rejected). |
+| `approved_by_1` | `String` | User ID of the first-stage approver. |
+| `approved_by_2` | `String` | User ID of the second-stage approver. |
+| `approval_1_at` | `DateTime` | Timestamp of first approval. |
+| `approval_2_at` | `DateTime` | Timestamp of second approval. |
 | `submitted_at`| `DateTime` | Timestamp of submission. |
 | `submitted_by`| `String` | User who entered the data. |
 | `metadata` | `JSONB` | Stores GPS, IP address, and browser/OS info. |
@@ -189,6 +219,11 @@ If a manager corrects Bob's name later.
 | id | target_id (log_id) | old_value (JSONB) | new_value (JSONB) | action |
 |:---|:---|:---|:---|:---|
 | 1 | `log-102` | `{"user_name": "Bob Smith"}` | `{"user_name": "Robert Smith"}` | VALUE_EDIT |
+
+#### **Table: `UserGroups` (New)**
+| group_id | group_name | members (JSONB) | permissions (JSONB) |
+|:---|:---|:---|:---|
+| `grp-1` | Quality Managers | `["user-1", "user-2"]` | `{"can_approve": true, "stage": 1}` |
 
 ---
 *Last Updated: May 6, 2026*
