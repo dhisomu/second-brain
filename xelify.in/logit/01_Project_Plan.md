@@ -109,12 +109,12 @@ To ensure a functional system as quickly as possible, development will follow th
 [← Back to Phase 4](#phase-4)
 **Goal**: Ensure full traceability and approval cycles for every log entry.
 
-### Feature 4.1: Immutable Audit Trail
-*   **User Story**: As an Auditor, I want to see the history of changes for a log entry so that I can verify data integrity.
+### Feature 4.1: Comprehensive Lifecycle Audit Trail
+*   **User Story**: As an Auditor, I want to see the full history of a log (Submission, Approvals, Edits, Resubmissions) so that I can verify the complete chain of custody.
 *   **Acceptance Criteria**:
-    *   **Given**: An existing log entry.
-    *   **When**: A manager edits the status from "Submitted" to "Approved".
-    *   **Then**: An entry is created in the audit log showing the old value, new value, timestamp, and user.
+    *   **Given**: A log entry.
+    *   **When**: Any action is taken (Submit, Approve, Reject, Edit, Resubmit).
+    *   **Then**: A new entry is added to `AuditLogs` with the action name and a JSONB delta of what changed.
 
 ---
 
@@ -196,6 +196,19 @@ This table stores the entries pushed by operators in the field.
 | `submitted_by`| `String` | User who entered the data. |
 | `metadata` | `JSONB` | Stores GPS, IP address, and browser/OS info. |
 
+### 3. `AuditLogs` (The History)
+A read-only table for immutable tracking of all lifecycle events.
+
+| Column | Type | Description |
+|:---|:---|:---|
+| `id` | `BigInt` | Sequence ID. |
+| `target_id` | `UUID` | Reference to the `LogSubmissions` entry being changed. |
+| `old_value` | `JSONB` | Snapshot of data/status **before** the action. |
+| `new_value` | `JSONB` | Snapshot of data/status **after** the action. |
+| `action` | `String` | Lifecycle event: `SUBMIT`, `APPROVE_1`, `APPROVE_2`, `REJECT`, `EDIT_RESUBMIT`. |
+| `performed_by`| `String` | User who took the action. |
+| `timestamp` | `DateTime` | When the event occurred. |
+
 ### 4. Implementation Example (Concrete Data)
 
 To visualize how these tables work together, here is a "Simple Feedback" form example.
@@ -218,7 +231,8 @@ If a manager corrects Bob's name later.
 
 | id | target_id (log_id) | old_value (JSONB) | new_value (JSONB) | action |
 |:---|:---|:---|:---|:---|
-| 1 | `log-102` | `{"user_name": "Bob Smith"}` | `{"user_name": "Robert Smith"}` | VALUE_EDIT |
+| 1 | `log-102` | `{"user_name": "Bob Smith"}` | `{"user_name": "Robert Smith"}` | EDIT_RESUBMIT |
+| 2 | `log-102` | `{"status": "Submitted"}` | `{"status": "Approved_1"}` | APPROVE_1 |
 
 #### **Table: `UserGroups` (New)**
 | group_id | group_name | members (JSONB) | permissions (JSONB) |
