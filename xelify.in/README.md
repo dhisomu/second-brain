@@ -60,6 +60,7 @@ We have migrated from SQLite to **PostgreSQL 15** for all environments to suppor
 ## 📱 Application Roadmap & Docs
 Centralized planning for core Xelify applications.
 
-- **[Logit (Paperless Log Book)](logit/roadmap.md)**: Universal low-code platform for digital data collection and logging.
+- **[Logit (Paperless Log Book)](logit/00_RoadMap.md)**: Universal low-code platform for digital data collection and logging.
+- **[Logit Project Plan](logit/01_Project_Plan.md)**: Structured development plan with EPICs and User Stories.
 - **Labelit (QR/Asset Labeling)**: (In Development) - Platform for asset tracking and dynamic QR label generation.
 

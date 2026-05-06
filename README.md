@@ -16,7 +16,7 @@ Welcome to the **Master Knowledge Base** for the `opssim-prod-vnic` server. This
     *   [PostgreSQL Management Guide](./xify.in/docs/migration_sqlite_to_postgresql.md)
 *   [**xelify.in**](./xelify.in/) — Core Infrastructure & Edge Proxy.
     *   [System Architecture](./xelify.in/system_architecture.md)
-    *   [Logit Roadmap](./xelify.in/logit/roadmap.md) — Universal Paperless Log System.
+    *   [Logit Roadmap](./xelify.in/logit/00_RoadMap.md) — Universal Paperless Log System.
 *   [**domorelabs.in**](./domorelabs.in/) — Training & LMS Platform.
     *   [System Architecture](./domorelabs.in/system_architecture.md) — Triple-stack (Dev/Stage/Prod) mappings.
 
