@@ -220,7 +220,7 @@ This example tracks the journey of two different forms through their lifecycle.
 **Table: `FormDefinitions`**
 | form_id | name | version | workflow_config | created_at |
 |:---|:---|:---|:---|:---|
-| `f-100` | Shift Handover | 1 | `{"stages": 1, "can_create": ["g-ops"], "can_edit": ["g-ops"]}` | `2026-05-06T08:00:00Z` |
+| `f-100` | Shift Handover | 1 | `{"stages": 1, "can_create": ["g-ops"], "can_edit": ["g-ops"], "approvers_s1": ["g-ops-mgr"]}` | `2026-05-06T08:00:00Z` |
 
 **Table: `LogSubmissions`**
 | log_id | form_id | version | data (JSONB) | status | submitted_at | approved_by_1 |
@@ -235,7 +235,7 @@ This example tracks the journey of two different forms through their lifecycle.
 **Table: `FormDefinitions`**
 | form_id | name | version | workflow_config | created_at |
 |:---|:---|:---|:---|:---|
-| `f-200` | Quality Audit | 1 | `{"stages": 2}` | `2026-05-06T09:00:00Z` |
+| `f-200` | Quality Audit | 1 | `{"stages": 2, "can_create": ["g-ops"], "can_edit": ["g-ops"], "approvers_s1": ["g-qa"], "approvers_s2": ["g-factory-mgr"]}` | `2026-05-06T09:00:00Z` |
 
 **Table: `LogSubmissions`**
 | log_id | form_id | status | approved_by_1 | approved_by_2 | approval_1_at | approval_2_at |
